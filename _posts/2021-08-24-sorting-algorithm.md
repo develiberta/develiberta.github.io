@@ -35,12 +35,17 @@ tags: [Sorting, Algorithm]
 	: 위와 같이 한 사이클을 돌면 가장 큰 원소가 가장 오른쪽에 위치하게 된다.
 	: 그러므로 교환할 항의 왼쪽 항을 기준으로, 첫 번째 사이클은 1부터 (n-1)까지, 두번째 사이클은 1부터 (n-2)까지, (n-1)번째 사이클은 1부터 1까지 비교하면 된다.
 	```java
-	private void writeObject(java.io.ObjectOutputStream s)
-		throws java.io.IOException {
-		// Write out any hidden serialization magic
-		s.defaultWriteObject();
-		for (E e: map.keySet()) s.writeObject(e);
-	}
+	private void bubbleSort(int[] array) {
+        for (int i=array.length-2; i>=0; i--) {
+            for (int j=0; j<=i; j++) {
+                if (array[j] > array[j+1]) {
+                    int tmp = array[j];
+                    array[j] = array[j+1];
+                    array[j+1] = tmp;
+                }
+            }
+        }
+    }
 	```
 	
 	2. 선택 정렬(selection sort)
@@ -48,12 +53,17 @@ tags: [Sorting, Algorithm]
 	: 위와 같이 한 사이클을 돌면 가장 작은 원소가 가장 왼쪽에 위치하게 된다.
 	: 그러므로 교환할 항의 왼쪽 항을 기준으로, 첫 번째 사이클은 첫 번째 원소를 기준으로, 두 번째 사이클은 두 번째 원소를 기준으로, (n-1)번째 사이클은 (n-1)번째 원소를 기준으로 해서, 나머지 오른쪽 원소들과 비교하면 된다.
 	```java
-	private void writeObject(java.io.ObjectOutputStream s)
-		throws java.io.IOException {
-		// Write out any hidden serialization magic
-		s.defaultWriteObject();
-		for (E e: map.keySet()) s.writeObject(e);
-	}
+	private void selectionSort(int[] array) {
+        for (int i=0; i<=array.length-2; i++) {
+            for (int j=i+1; j<array.length; j++) {
+                if (array[i] > array[j]) {
+                    int tmp = array[j];
+                    array[j] = array[i];
+                    array[i] = tmp;
+                }
+            }
+        }
+    }
 	```
 	
 	3. 삽입 정렬(insertion sort)
@@ -62,12 +72,19 @@ tags: [Sorting, Algorithm]
 	: 그러므로 교환할 항의 오른쪽 항을 기준으로, 두 번째 사이클은 세 번째 원소를 첫 번째부터 두 번째 원소와 비교하고, (n-1)번째 사이클은 n번째 원소를 첫 번째부터 (n-1)번째 원소와 비교하면 된다.
 	: 이때 삽입할 위치를 찾았다면 그 오른쪽에 있는 항들은 한 칸씩 오른쪽 옆으로 이동하게 된다.
 	```java
-	private void writeObject(java.io.ObjectOutputStream s)
-		throws java.io.IOException {
-		// Write out any hidden serialization magic
-		s.defaultWriteObject();
-		for (E e: map.keySet()) s.writeObject(e);
-	}
+	private void insertionSort(int[] array) {
+        for (int i=1; i<=array.length-1; i++) {
+            for (int j=0; j<i; j++) {
+                if (array[i] < array[j]) {
+                    int tmp = array[i];
+                    for (int k=i-1; k>=j; k--) {
+                        array[k+1] = array[k];
+                    }
+                    array[j] = tmp;
+                }
+            }
+        }
+    }
 	```
 	
 	
