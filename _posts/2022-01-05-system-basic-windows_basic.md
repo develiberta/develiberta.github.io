@@ -33,7 +33,7 @@ tags: [Securiy, Windows]
 ## 윈도우 보안 식별자 (SID:Security Identifier)
 ---
 1. 개요
-	- 윈도우의 각 사용자나 그룹에 부여되는 고유한 식별번호 (UNIX/Linux의 UID 및 GID)
+	- 윈도우의 각 사용자나 그룹에 부여되는 고유한 식별번호 (UNIX/Linux의 UID 및 GID에 대응)
 	- 사용자가 로그인을 수행하면 접근 토큰이 생성되며, 해당 토큰에 로그인한 사용자 및 그 사용자가 속한 모든 작업 그룹들에 관한 보안 식별자(SID) 정보 있음
 	- 접근 토큰의 사본은 그사용자에 의해 시작된 모든 프로세스에 할당됨
 	- 사용자 계정 및 패스워드 정보를 담고 있는 SAM 파일에 SID 정보가 저장되어 있음
@@ -62,7 +62,7 @@ AccountType  Caption                             Domain           FullName  Name
 1. 개요
 	1. 사용자가 윈도우에 인증 요청
 	2. 윈도우가 사용자에 Challenge 값(1회성 임의 문자열) 전송
-	3. 사용자가 윈도우에 Response 값(Challenge 갑과 비밀번호를 알고리즙으로 조합해서 생성한 값) 전송
+	3. 사용자가 윈도우에 Response 값(Challenge 갑과 비밀번호를 알고리즘으로 조합해서 생성한 값) 전송
 	4. 윈도우가 Response 값 확인 후 인증 성공 여부 전송
 	
 2. 인증 암호 알고리즘
