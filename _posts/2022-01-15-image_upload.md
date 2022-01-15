@@ -10,4 +10,4 @@ tags: [typography]
 ## Image Upload
 ---
 ![Ram](/assets/img/logo/ram.png)
-_This is Develiberta Logo_
+_Copyrightⓒ2022 Develiberta All rights reserved._
