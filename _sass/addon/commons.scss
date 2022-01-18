@@ -21,6 +21,11 @@
 
 }
 
+@font-face {
+    font-family: 'RIDIBatang';
+    src:url('/assets/fonts/RIDIBatang.otf') format('woff');
+} 
+
 html:not([mode]),
 html[mode=light] {
   @include mode-toggle();
@@ -50,7 +55,7 @@ body {
   background: var(--body-bg);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
-  font-family: 'Source Sans Pro', 'Microsoft Yahei', sans-serif;
+  font-family: 'RIDIBatang', 'Source Sans Pro', 'Microsoft Yahei', sans-serif;
 }
 
 /* --- Typography --- */
@@ -994,7 +999,7 @@ $sidebar-display: "sidebar-display";
   display: none;
   font-size: 1.1rem;
   font-weight: 600;
-  font-family: sans-serif;
+  font-family: 'RIDIBatang', sans-serif;
   color: var(--topbar-text-color);
   text-align: center;
   width: 70%;
