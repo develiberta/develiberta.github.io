@@ -52,4 +52,4 @@ tags: [Securiy, Linux]
 1. IPC(Inter-Process Communication, 프로세스 간 통신 기법)의 일종
 2. 둘 이상의 명령을 함께 묶어, 출력의 결과를 다른 프로그램의 입력으로 전환
 3. 문법
-	- command1 | command2 [| command3 ...]
+	- command1 \| command2 \[\| command3 ...\]
