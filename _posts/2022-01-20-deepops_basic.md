@@ -22,15 +22,15 @@ tags: [DevOps, Ansible]
 1. Install a supported operating system on all nodes.
 
 2. Set up your provisioning machine.
-	- ```shell
+	```shell
 	# Install software prerequisites and copy default configuration
 	./scripts/setup.sh
 	```
 
 3. Create and edit the Ansible inventory.
-Edit inventory
-# Add Slurm controller/login host to `slurm-master` group
-	- ```shell
+	```shell
+	# Edit inventory
+	# Add Slurm controller/login host to `slurm-master` group
 	# Add Slurm worker/compute hosts to the `slurm-node` groups
 	vi config/inventory
 	```
@@ -40,24 +40,24 @@ Edit inventory
 	4. [all:vars] 하위 #SSH User에 ansible_user 변경
 
 4. (optional) Modify `config/group_vars/*.yml` to set configuration parameters
-	- ```shell
+	```shell
 	vi config/group_vars/slurm_cluster.yml
+	# 전체 파일을 살펴보며 설정 정보 수정
 	```
-	- 전체 파일을 살펴보며 설정 정보 수정
 
 5. Verify the configuration.
-	- ```shell
+	```shell
 	ansible all -m raw -a "hostname" -k
 	```
 
 6. (optional) Modify `playbooks/*.yml` to set configuration tasks
-	- ```shell
+	```shell
 	vi playbooks/slurm-cluster.yml
+	# 전체 파일을 살펴보며 설정 정보 수정
 	```
-	- 전체 파일을 살펴보며 설정 정보 수정
 
 7. Install Slurm.
-	- ```shell
+	```shell
 	# NOTE: If SSH requires a password, add: `-k`
 	# NOTE: If sudo on remote machine requires a password, add: `-K`
 	# NOTE: If SSH user is different than current user, add: `-u ubuntu`
