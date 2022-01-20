@@ -42,6 +42,14 @@ tags: [Securiy, Linux]
 	
 ## UNIX/Linux 입출력 재지정
 ---
+1. 입출력 대상으로 표준 입력(0), 표준 출력(1), 표준 에러(2)를 사용하지 않고, 다른 경로인 파일로 재지정
+2. 문법
+	- 입력 재지정 : command [0]< file_name
+	- 출력 재지정 : command [1 or 2]> file_name
 
 ## UNIX/Linux 파이프
 ---
+1. IPC(Inter-Process Communication, 프로세스 간 통신 기법)의 일종
+2. 둘 이상의 명령을 함께 묶어, 출력의 결과를 다른 프로그램의 입력으로 전환
+3. 문법
+	- command1 | command2 [| command3 ...]
