@@ -65,4 +65,5 @@ tags: [DevOps, Ansible]
 	```
 
 [참고]
-Slurm Deployment Guide(https://github.com/NVIDIA/deepops/tree/master/docs/slurm-cluster)
+Slurm Deployment Guide
+https://github.com/NVIDIA/deepops/tree/master/docs/slurm-cluster
