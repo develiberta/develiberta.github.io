@@ -1,5 +1,5 @@
 ---
-title: Deeops 라이브러리를 이용한 모니터링(프로메테우스, 그라파나) 기본 구성
+title: nvidia/deeops 라이브러리를 이용한 모니터링(프로메테우스, 그라파나) 기본 구성
 author: Develiberta
 date: 2022-01-20 11:00:00 +0900
 categories: [DevOps, Ansible]
@@ -9,15 +9,15 @@ tags: [DevOps, Ansible]
 
 ## 학습 목표
 ---
-1. Deepops가 무엇인지 이해하고 설명할 수 있다.
-2. Deepops를 이용해서 기본적인 환경을 구성할 수 있다.
+1. deepops가 무엇인지 이해하고 설명할 수 있다.
+2. deepops를 이용해서 기본적인 환경을 구성할 수 있다.
 
-## Deepops 개요
+## deepops 개요
 ---
 1. https://github.com/NVIDIA/deepops
 2. GPU 인프라 및 자동화 도구
 
-## Deepops를 이용한 기본적인 환경 구성
+## deepops를 이용한 기본적인 환경 구성
 ---
 1. Install a supported operating system on all nodes.
 
