@@ -64,6 +64,6 @@ tags: [DevOps, Ansible]
 	ansible-playbook --ask-become-pass -k -l slurm-cluster playbooks/slurm-cluster.yml
 	```
 
-[참고]
-Slurm Deployment Guide
-https://github.com/NVIDIA/deepops/tree/master/docs/slurm-cluster
+## 참고
+1. Slurm Deployment Guide
+	https://github.com/NVIDIA/deepops/tree/master/docs/slurm-cluster
