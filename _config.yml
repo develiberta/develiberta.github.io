@@ -82,7 +82,7 @@ theme_mode:   dark
 img_cdn: ''
 
 # the avatar on sidebar, support local or CORS resources
-avatar: /assets/img/favicons/android-icon-144x144.png
+avatar: /assets/img/favicons/android-chrome-512x512.png
 
 # boolean type, the global switch for ToC in posts.
 toc: true
