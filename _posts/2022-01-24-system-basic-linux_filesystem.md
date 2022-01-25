@@ -44,6 +44,8 @@ tags: [Securiy, Linux]
 	| 파일크기						| 파일의 크기 																																				|
 	| MAC Time ★				| last Modification Time _ 파일의 내용을 마지막으로 수정한 시간<br> last Access Time _ 파일을 마지막으로 접근한 시간<br> last Change Time _ 파일의 속성(inode 정보)을 마지막으로 변경한 시간	|
 	| block index				| 데이터 블럭s에 저장되어 있는 파일 내용에 대한 색인 정보 																													|
+	- 파일명은 속성에 포함되지 않음
+	- 디렉토리가 파일명과 inode number의 매핑 정보를 갖고 있음
 4. 데이터 블럭s
 	- 실제 파일의 내용(데이터)이 저장되는 블럭
 	- 고정 크기 block들로 구성됨
