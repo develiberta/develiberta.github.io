@@ -1,5 +1,5 @@
 ---
-title: 유닉스/리눅스 기본 학습
+title: 유닉스/리눅스 기본 학습 - 기본
 author: Develiberta
 date: 2022-01-18 21:20:00 +0900
 categories: [Security, Linux]
