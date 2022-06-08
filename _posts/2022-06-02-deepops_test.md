@@ -6,6 +6,7 @@ categories: [DevOps, Ansible]
 tags: [DevOps, Ansible]
 ---
 
+
 ## 목적
 ---
 1. deepops를 이용해서 필요한 환경을 구성할 수 있다.
