@@ -57,6 +57,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	+ deepops-mp # master 노드
 	
 	[slurm-node]
+	+ deepops-mp # master 노드에 대해서도 모니터링하고자 하는 경우
 	+ deepops-w	# worker 노드
 	
 	[all:vars]
