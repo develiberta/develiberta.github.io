@@ -636,7 +636,150 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	```shell
 	# ☆ 다음을 변경 (모두 주석 처리 후, 3개 부분만 주석 해제)
 	#---
+	# Slurm Cluster Playbook
 	
+	# Install python required for Ansible
+	#- include: bootstrap/bootstrap-python.yml
+	
+	# Set up passwordless sudo and SSH keys if needed
+	#- include: bootstrap/bootstrap-ssh.yml
+	#- include: bootstrap/bootstrap-sudo.yml
+	
+	# Disable cloud-init
+	#- include: generic/disable-cloud-init.yml
+	#  when: deepops_disable_cloud_init
+	
+	# Configure hostnames, /etc/hosts
+	# ☆ 다음을 주석 처리 해제
+	- include: generic/hosts.yml
+	when: "{% raw %}{{ slurm_configure_etc_hosts | default(true) }}{% endraw %}"
+	tags:
+	- set-etc-hosts
+	
+	# Configure Chrony (NTP) sync
+	#- include: generic/chrony-client.yml
+	#  when: chrony_install|default(true)
+	
+	# Set up a local cluster container registry
+	#- include: container/standalone-container-registry.yml hostlist=slurm-master
+	#  when: slurm_enable_container_registry|default(true)
+	
+	# Set up NGINX-based container caching
+	#- include: container/nginx-docker-registry-cache-server.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ nginx_docker_cache_hostgroup | default('slurm-cache') }}{% endraw %}"
+	#  when: slurm_enable_nginx_docker_cache | default(false)
+	#- include: container/nginx-docker-registry-cache-client.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ nginx_docker_cache_clients | default('slurm-node') }}{% endraw %}"
+	#  when: slurm_enable_nginx_docker_cache | default(false)
+	
+	# Install NVIDIA driver
+	#- include: nvidia-software/nvidia-driver.yml
+	#  when: slurm_cluster_install_nvidia_driver|default(true)
+	
+	# Install NVIDIA CUDA Toolkit
+	#   Note: the CUDA playbook also installs the driver, so we pass the
+	#   appropriate flag to this playbook as well.
+	#- include: nvidia-software/nvidia-cuda.yml
+	#  vars:
+	#     cuda_playbook_install_driver: "{% raw %}{{ slurm_cluster_install_nvidia_driver }}{% endraw %}"
+	#  when: slurm_cluster_install_cuda|default(true)
+	
+	# Install software
+	#- include: generic/software.yml
+	
+	# Set up NFS filesystem
+	#- include: generic/nfs-server.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ nfs_server_group | default('slurm-nfs[0]') }}{% endraw %}"
+	#  when: slurm_enable_nfs_server
+	#- include: generic/nfs-client.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ nfs_client_group | default('slurm-nfs-client') }}{% endraw %}"
+	#  when: slurm_enable_nfs_client_nodes
+	
+	# Install DCGM
+	#- include: nvidia-software/nvidia-dcgm.yml hostlist=slurm-node
+	#  when: install_dcgm|default(false)
+	
+	# Install Node Health Check
+	#- include: slurm-cluster/nhc.yml hostlist=slurm-node
+	#  when: slurm_install_nhc|default(false)
+	
+	# Install Slurm
+	#- include: slurm-cluster/slurm.yml
+	
+	# Install OpenMPI
+	#- include: slurm-cluster/openmpi.yml
+	#  when: slurm_cluster_install_openmpi|default(true)
+	
+	# Install Lmod
+	#- include: slurm-cluster/lmod.yml
+	#  when: slurm_install_lmod
+	
+	# Install the NVIDIA HPC SDK
+	#- include: nvidia-software/nvidia-hpc-sdk.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ sm_install_host | default('slurm-login[0]')}}{% endraw %}"
+	#  when: slurm_install_hpcsdk
+	
+	# Install monitoring services
+	# ☆ 다음을 주석 처리 해제
+	- include: slurm-cluster/prometheus.yml
+	vars:
+		hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
+	when: slurm_enable_monitoring
+	- include: slurm-cluster/grafana.yml
+	vars:
+		hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
+	when: slurm_enable_monitoring
+	
+	# Install monitoring exporters
+	#- include: slurm-cluster/prometheus-slurm-exporter.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
+	#  when: slurm_enable_monitoring
+	# ☆ 다음을 주석 처리 해제
+	- include: slurm-cluster/prometheus-node-exporter.yml
+	when: slurm_enable_monitoring
+	- include: slurm-cluster/nvidia-dcgm-exporter.yml
+	when: slurm_enable_monitoring
+	
+	# Set up rsyslog forwarding from compute nodes to head node
+	#- include: generic/rsyslog-server.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ rsyslog_server_hostname | default('slurm-master[0]') }}{% endraw %}"
+	#  when: slurm_enable_rsyslog_server|default(true)
+	#- include: generic/rsyslog-client.yml
+	#  vars:
+	#    hostlist: "{% raw %}{{ rsyslog_client_group | default('slurm-node') }}{% endraw %}"
+	#  when: slurm_enable_rsyslog_client|default(true)
+	
+	# Install Singularity
+	#- include: container/singularity.yml
+	#  when: slurm_cluster_install_singularity|default(true)
+	
+	# Install Open OnDemand
+	#- include: slurm-cluster/open-ondemand.yml
+	#  when: install_open_ondemand
+	
+	# Set Permissions to adjust GPU Clocks speeds
+	#- include: utilities/gpu-clocks.yml
+	#  when: allow_user_set_gpu_clocks
+	
+	# Install Enroot and Pyxis
+	#- include: container/pyxis.yml
+	#  when:
+	#    - slurm_install_enroot
+	#    - slurm_install_pyxis
+	#  tags:
+	#    - pyxis
+	
+	# Ensure that nv_peer_mem is loaded
+	#- include: nvidia-software/nvidia-peer-memory.yml
+	#  tags:
+	#    - nvidia-peer-memory
 	```
 
 9. (Optional: nvidia driver, docker 설치는 되어 있다고 가정하는 경우 ★) provisioning machine에서 deepops nvidia-dcgm-exporter 설치 정보를 수정한다.
