@@ -25,27 +25,26 @@ tags: [DevOps, Ansible]
 
 ## deepops를 이용한 테스트 환경 구성
 ---
-0. 테스트 구성도
+1. 테스트 구성도
 ![deepops_test](/assets/img/illustrations/deepops_test.png)
 _Copyrightⓒ2022 Develiberta All rights reserved._
-
-- deepops 22.04.2 버전을 기준으로 작성되었다.
+- 테스트는 deepops 22.04.2 버전을 기준으로 작성되었으며, OS는 Ubuntu 20.04 LTS를 설치했다.
 - master 노드에 gpu가 있는 경우, provisioning 노드와 master 노드를 하나의 서버로 통합하지 않는다. (위의 그림처럼 하는 경우 별도의 작업 필요)
-- 왜냐하면 provisioning machine에서 각 노드에 필요한 프로그램을 설치하는 과정에서 재부팅이 되기 때문이다.
+	- 왜냐하면 provisioning machine에서 각 노드에 필요한 프로그램을 설치하는 과정에서 재부팅이 되기 때문이다.
 
-1. 모든 노드에 지원되는 OS를 설치한다. 지원되는 OS는 다음과 같다.
+2. 모든 노드에 지원되는 OS를 설치한다. 지원되는 OS는 다음과 같다.
 - NVIDIA DGX OS 4, 5
 - Ubuntu 18.04 LTS, 20.04 LTS
 - CentOS 7, 8
 
-2. provisioning machine에서 기본적인 deepops를 설치한다.
+3. provisioning machine에서 기본적인 deepops를 설치한다.
 	```shell
 	git clone https://github.com/NVIDIA/deepops.git
 	cd deepops
 	./scripts/setup.sh
 	```
-	
-3. provisioning machine에서 deepops inventory를 수정한다.
+
+4. provisioning machine에서 deepops inventory를 수정한다.
 	```shell
 	vi ./config/inventory
 	
@@ -65,12 +64,12 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	+ ansible_user=nvidia # 위에서 생성한 사용자명
 	```
 	
-4. provisioning machine에서 deepops inventory가 정상적으로 동작하는지 확인한다.
+5. provisioning machine에서 deepops inventory가 정상적으로 동작하는지 확인한다.
 	```shell
 	ansible all -m raw -a "hostname" -k
 	```
 
-5. provisioning machine에서 deepops 전체 설정 정보를 수정한다.
+6. provisioning machine에서 deepops 전체 설정 정보를 수정한다.
 	```shell
 	vi ./config/group_vars/all.yml
 	
@@ -383,7 +382,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	ngc_ready_tensorflow: "nvcr.io/nvidia/tensorflow:18.10-py3"
 	```
 
-6. provisioning machine에서 deepops slurm-cluster 설정 정보를 수정한다.
+7. provisioning machine에서 deepops slurm-cluster 설정 정보를 수정한다.
 	```shell
 	vi ./config/group_vars/slurm-cluster.yml
 	
@@ -608,7 +607,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	rsyslog_client_group: "slurm-cluster"
 	```
 
-7. provisioning machine에서 deepops slurm-cluster 설치 정보를 수정한다.
+8. provisioning machine에서 deepops slurm-cluster 설치 정보를 수정한다.
 	```shell
 	vi ./playbooks/slurm-cluster.yml
 	
@@ -756,7 +755,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#    - nvidia-peer-memory
 	```
 
-8. Slurm Cluster를 설치한다.
+9. Slurm Cluster를 설치한다.
 	```shell
 	# NOTE: If SSH requires a password, add: `-k`
 	# NOTE: If sudo on remote machine requires a password, add: `-K`
