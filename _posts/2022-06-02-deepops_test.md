@@ -28,7 +28,7 @@ tags: [DevOps, Ansible]
 ![deepops_test](/assets/img/illustrations/deepops_test.png)
 _Copyrightⓒ2022 Develiberta All rights reserved._
 - 테스트는 deepops 22.04.2 버전을 기준으로 작성되었으며, OS는 Ubuntu 20.04 LTS를 설치했다.
-- master 노드에 gpu가 있는 경우, provisioning 노드와 master 노드를 하나의 서버로 통합하지 않는다. (위의 그림처럼 하는 경우 별도의 작업 필요) 왜냐하면 provisioning machine에서 각 노드에 필요한 프로그램을 설치하는 과정에서 재부팅이 되기 때문이다.
+- master 노드에 gpu가 있는 경우, provisioning 노드와 master 노드를 하나의 서버로 통합하지 않는다. (위의 그림처럼 하는 경우 별도의 작업 필요) 왜냐하면 provisioning 노드에서 각 노드(master 노드와 worker 노드)에 필요한 프로그램을 설치하는 과정에서 각 노드가 재부팅될 가능성이 있는데, 설치를 주관하는 provisioning 노드가 재부팅되면 설치가 비정상적으로 종료되기 때문이다.
 - 파일 내에서 추가나 변경 또는 삭제가 필요한 부분은 ☆로 표시했다.
 
 2. 모든 노드에 지원되는 OS를 설치한다. 지원되는 OS는 다음과 같다.
