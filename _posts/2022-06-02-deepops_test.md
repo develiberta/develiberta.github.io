@@ -47,19 +47,23 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	vi ./config/inventory
 	
 	[all]
-	+ deepops-mp	ansible_host=192.168.30.119
-	+ deepops-w		ansible_host=192.168.30.121
+	# 다음을 추가
+	deepops-mp	ansible_host=192.168.30.119
+	deepops-w	ansible_host=192.168.30.121
 	
 	[slurm-master]
-	+ deepops-mp # master 노드
+	# 다음을 추가
+	deepops-mp	# master 노드
 	
 	[slurm-node]
-	+ deepops-mp # master 노드에 대해서도 모니터링하고자 하는 경우에만 추가
-	+ deepops-w	# worker 노드
+	# 다음을 추가
+	deepops-mp	# master 노드에 대해서도 모니터링하고자 하는 경우에만 추가
+	deepops-w	# worker 노드
 	
 	[all:vars]
 	# SSH User
-	+ ansible_user=nvidia # 위에서 생성한 사용자명
+	# 다음을 추가
+	ansible_user=nvidia	# 위에서 생성한 사용자명
 	```
 	
 5. provisioning machine에서 deepops inventory가 정상적으로 동작하는지 확인한다.
