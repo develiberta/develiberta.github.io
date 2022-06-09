@@ -14,9 +14,8 @@ tags: [DevOps, Ansible]
 
 ## 실천 목표
 ---
-1. (internet connection O) deepops를 이용해서 nvidia driver, docker, prometheus, graphana를 설치하고 모니터링한다.
-2. (internet connection O) deepops를 이용해서 (nvidia driver, docker 설치는 되어 있다고 가정하고) prometheus, graphana를 설치하고 모니터링한다.
-3. (internet connection X) deepops를 이용하지 않고 수동으로 (nvidia driver, docker 설치는 되어 있다고 가정하고) prometheus, graphana를 설치하고 모니터링한다.
+1. deepops를 이용해서 nvidia driver, docker, prometheus, graphana를 설치하고 모니터링한다.
+2. deepops를 이용해서 (nvidia driver, docker 설치는 되어 있다고 가정하고★) prometheus, graphana를 설치하고 모니터링한다.
 
 ## deepops 개요
 ---
@@ -56,7 +55,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	+ deepops-mp # master 노드
 	
 	[slurm-node]
-	+ deepops-mp # master 노드에 대해서도 모니터링하고자 하는 경우
+	+ deepops-mp # master 노드에 대해서도 모니터링하고자 하는 경우에만 추가
 	+ deepops-w	# worker 노드
 	
 	[all:vars]
@@ -755,7 +754,32 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#    - nvidia-peer-memory
 	```
 
-9. Slurm Cluster를 설치한다.
+9. (Optional: nvidia driver, docker 설치는 되어 있다고 가정하는 경우★) provisioning machine에서 deepops nvidia-dcgm-exporter 설치 정보를 수정한다.
+	```shell
+	vi ./playbooks/slurm-cluster/nvidia-dcgm-exporter.yml
+	
+	---
+	#- include: ../container/docker.yml
+	#- include: ../nvidia-software/nvidia-driver.yml
+	#- include: ../container/nvidia-docker.yml
+	
+	- hosts:  "{{ hostlist | default('all') }}"
+	become: yes
+	tasks:
+		- name: install custom facts module
+		include_role:
+			name: facts
+		- name: set GPU fact
+		set_fact:
+			has_gpus: true
+		when: ansible_local['gpus']['count']
+		- name: configure dcgm exporter
+		include_role:
+			name: nvidia-dcgm-exporter
+		when: ansible_distribution == "Ubuntu" or ansible_os_family == "RedHat"
+	```
+
+10. Slurm Cluster를 설치한다.
 	```shell
 	# NOTE: If SSH requires a password, add: `-k`
 	# NOTE: If sudo on remote machine requires a password, add: `-K`
