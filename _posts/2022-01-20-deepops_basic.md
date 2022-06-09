@@ -1,5 +1,5 @@
 ---
-title: nvidia/deeops 라이브러리를 이용한 모니터링(프로메테우스, 그라파나) 기본 구성
+title: nvidia/deeops 라이브러리를 이용한 모니터링(prometheus, grafana) 기본 구성
 author: Develiberta
 date: 2022-01-20 11:00:00 +0900
 categories: [DevOps, Ansible]

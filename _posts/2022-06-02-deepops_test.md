@@ -1,5 +1,5 @@
 ---
-title: nvidia/deeops 라이브러리를 이용한 모니터링(프로메테우스, 그라파나) 테스트 구성
+title: nvidia/deeops 라이브러리를 이용한 모니터링(prometheus, grafana) 테스트 구성
 author: Develiberta
 date: 2022-06-08 17:30:00 +0900
 categories: [DevOps, Ansible]
