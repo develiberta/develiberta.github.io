@@ -635,7 +635,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	```
 	```shell
 	# ☆ 다음을 변경 (모두 주석 처리 후, 3개 부분만 주석 해제)
-	#---
+	---
 	# Slurm Cluster Playbook
 	
 	# Install python required for Ansible
