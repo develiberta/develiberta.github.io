@@ -20,7 +20,7 @@ timezone: Asia/Seoul
 
 title: Develiberta                     # the main title
 
-tagline: Life Development              # it will display as the sub-title
+tagline: *                             # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   A minimal, portfolio, sidebar,
@@ -43,8 +43,8 @@ social:
   email: develiberta@gmail.com          # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username      # change to your twitter homepage
-    - https://github.com/username       # change to your github homepage
+    - https://twitter.com/develiberta      # change to your twitter homepage
+    - https://github.com/develiberta      # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
