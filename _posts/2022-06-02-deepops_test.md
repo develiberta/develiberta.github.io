@@ -91,9 +91,9 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	# no_proxy: localhost,cluster.local,127.0.0.1,::1,10.0.2.10,10.0.2.20,10.0.2.30
 	
 	# proxy_env:
-		# http_proxy: '{{ http_proxy }}'
-		# https_proxy: '{{ https_proxy }}'
-		# no_proxy: '{{ no_proxy }}'
+		# http_proxy: '{% raw %}{{ http_proxy }}{% endraw %}'
+		# https_proxy: '{% raw %}{{ https_proxy }}{% endraw %}'
+		# no_proxy: '{% raw %}{{ no_proxy }}{% endraw %}'
 	
 	
 	################################################################################
@@ -134,7 +134,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#  - wget
 	#  - build-essential
 	#  - linux-tools-generic
-	#  - "{{ 'linux-headers-' + ansible_kernel }}"
+	#  - "{% raw %}{{ 'linux-headers-' + ansible_kernel }}{% endraw %}"
 	#software_remove_packages:
 	#  - popularity-contest
 	
@@ -159,12 +159,12 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	# Playbook: nfs-client.yml
 	#nfs_mounts:
 	#  - mountpoint: /mnt/shared
-	#    server: '{{ groups["slurm-master"][0] }}'
+	#    server: '{% raw %}{{ groups["slurm-master"][0] }}{% endraw %}'
 	#    path: /export/shared
 	#    options: async,vers=3
 	
 	# Extra Packages for Enterprise Linux (RHEL/CentOS)
-	epel_package: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+	epel_package: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{% raw %}{{ ansible_distribution_major_version }}{% endraw %}.noarch.rpm"
 	
 	################################################################################
 	# USERS                                                                        #
@@ -202,9 +202,9 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	
 	# DGX-specific vars may be used to target specific models,
 	# because available versions for DGX may differ from the generic repo
-	#cuda_dgx_1_version: "{{ cuda_version }}"
-	#cuda_dgx_2_version: "{{ cuda_version }}"
-	#cuda_dgx_a100_version: "{{ cuda_version }}"
+	#cuda_dgx_1_version: "{% raw %}{{ cuda_version }}{% endraw %}"
+	#cuda_dgx_2_version: "{% raw %}{{ cuda_version }}{% endraw %}"
+	#cuda_dgx_a100_version: "{% raw %}{{ cuda_version }}{% endraw %}"
 	
 	# Playbook: nvidia-set-gpu-clocks
 	# Resets the Gpu clocks to the default values. (see the `--reset-gpu-clocks` flag in nvidia-smi for more)
@@ -257,9 +257,9 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	ENROOT_MOUNT_HOME y
 	ENROOT_RESTRICT_DEV y
 	ENROOT_ROOTFS_WRITABLE y
-	ENROOT_RUNTIME_PATH {{ enroot_runtime_path }}
-	ENROOT_CACHE_PATH {{ enroot_cache_path }}
-	ENROOT_DATA_PATH {{ enroot_data_path }}
+	ENROOT_RUNTIME_PATH {% raw %}{{ enroot_runtime_path }}{% endraw %}
+	ENROOT_CACHE_PATH {% raw %}{{ enroot_cache_path }}{% endraw %}
+	ENROOT_DATA_PATH {% raw %}{{ enroot_data_path }}{% endraw %}
 	enroot_environ_config_files: []
 	enroot_environ_config_files_dgx:
 	- filename: 50-mellanox.env
@@ -277,7 +277,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	bind_paths: []
 	# example:
 	#- /mnt/shared
-	golang_install_dir: '/opt/go/{{ golang_version }}'
+	golang_install_dir: '/opt/go/{% raw %}{{ golang_version }}{% endraw %}'
 	golang_gopath: /opt/go/packages
 	
 	################################################################################
@@ -316,11 +316,11 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	# Playbook: maas, maas_management
 	maas_adminusers:
 	- username: 'admin'
-		email: 'admin@{{ maas_dns_domain }}'
+		email: 'admin@{% raw %}{{ maas_dns_domain }}{% endraw %}'
 		password: 'admin'
 	maas_dns_domain: 'deepops.local'
 	maas_region_controller: '192.168.1.1'
-	maas_region_controller_url: 'http://{{ maas_region_controller }}:5240/MAAS'
+	maas_region_controller_url: 'http://{% raw %}{{ maas_region_controller }}{% endraw %}:5240/MAAS'
 	maas_repo: 'ppa:maas/2.8'
 	
 	# Defines if maas user should generate ssh keys
@@ -349,7 +349,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	deepops_dir: /opt/deepops
 	# Directory for python virtualenv
 	# Roles: K8s GPU operator, GPU plugin, OpenShift/K8s
-	deepops_venv: '{{ deepops_dir }}/venv'
+	deepops_venv: '{% raw %}{{ deepops_dir }}{% endraw %}/venv'
 	
 	# OpenMPI
 	# Playbook: openmpi
@@ -462,11 +462,11 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 		options: "*(rw,sync,no_root_squash)"
 	nfs_mounts:
 	- mountpoint: /home
-		server: '{{ groups["slurm-master"][0] }}'
+		server: '{% raw %}{{ groups["slurm-master"][0] }}{% endraw %}'
 		path: /home
 		options: async,vers=3
 	- mountpoint: /sw
-		server: '{{ groups["slurm-master"][0] }}'
+		server: '{% raw %}{{ groups["slurm-master"][0] }}{% endraw %}'
 		path: /sw
 		options: async,vers=3
 	
@@ -490,17 +490,17 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	sm_prefix: "/sw"
 	
 	# Easybuild-specific
-	sm_module_root: "{{ sm_prefix }}/modules"
-	sm_software_path: "{{ sm_prefix }}/software"
-	sm_files_path: "{{ sm_prefix }}/easybuild_files"
-	sm_sources_path: "{{ sm_prefix }}/sources"
-	sm_build_path: "{{ sm_prefix }}/build"
+	sm_module_root: "{% raw %}{{ sm_prefix }}{% endraw %}/modules"
+	sm_software_path: "{% raw %}{{ sm_prefix }}{% endraw %}/software"
+	sm_files_path: "{% raw %}{{ sm_prefix }}{% endraw %}/easybuild_files"
+	sm_sources_path: "{% raw %}{{ sm_prefix }}{% endraw %}/sources"
+	sm_build_path: "{% raw %}{{ sm_prefix }}{% endraw %}/build"
 	sm_files_url: "https://github.com/DeepOps/easybuild_files.git"
 	sm_install_default: true
-	sm_module_path: "{{ sm_module_root }}/all"
+	sm_module_path: "{% raw %}{{ sm_module_root }}{% endraw %}/all"
 	
 	# Spack-specific
-	spack_install_dir: "{{ sm_prefix }}/spack"
+	spack_install_dir: "{% raw %}{{ sm_prefix }}{% endraw %}/spack"
 	spack_build_packages: false
 	spack_default_packages:
 	- "cuda@10.2.89"
@@ -536,7 +536,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	slurm_cluster_install_openmpi: false
 	openmpi_version: 4.0.4
 	openmpi_install_prefix: "/usr/local"
-	openmpi_configure: "./configure --prefix={{ openmpi_install_prefix }} --disable-dependency-tracking --disable-getpwuid --with-pmix={{ pmix_install_prefix }} --with-hwloc={{ hwloc_install_prefix }} --with-pmi={{ slurm_install_prefix }} --with-slurm={{ slurm_install_prefix }} --with-libevent=/usr"
+	openmpi_configure: "./configure --prefix={% raw %}{{ openmpi_install_prefix }}{% endraw %} --disable-dependency-tracking --disable-getpwuid --with-pmix={% raw %}{{ pmix_install_prefix }}{% endraw %} --with-hwloc={% raw %}{{ hwloc_install_prefix }}{% endraw %} --with-pmi={% raw %}{{ slurm_install_prefix }}{% endraw %} --with-slurm={% raw %}{{ slurm_install_prefix }}{% endraw %} --with-libevent=/usr"
 	
 	################################################################################
 	# Open OnDemand                                                                #
@@ -545,7 +545,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	# OOD Linux-host adapter requires `slurm_cluster_install_singularity` to be true
 	ood_install_linuxhost_adapter: no
 	
-	servername: '{{ ansible_fqdn }}'
+	servername: '{% raw %}{{ ansible_fqdn }}{% endraw %}'
 	httpd_port: 9050
 	httpd_listen_addr_port:
 	- 9050
@@ -586,8 +586,8 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	# Container registry                                                           #
 	################################################################################
 	slurm_enable_container_registry: false
-	docker_insecure_registries: "{{ groups['slurm-master'] | map('regex_replace', '^(.*)$', '\\1:5000') | list + ['registry.local:31500'] }}"
-	docker_registry_mirrors: "{{ groups['slurm-master'] | map('regex_replace', '^(.*)$', 'http://\\1:5000') | list }}"
+	docker_insecure_registries: "{% raw %}{{ groups['slurm-master'] | map('regex_replace', '^(.*)$', '\\1:5000') | list + ['registry.local:31500'] }}{% endraw %}"
+	docker_registry_mirrors: "{% raw %}{{ groups['slurm-master'] | map('regex_replace', '^(.*)$', 'http://\\1:5000') | list }}{% endraw %}"
 	
 	################################################################################
 	# Monitoring stack                                                             #
@@ -603,8 +603,8 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	################################################################################
 	slurm_enable_rsyslog_server: false
 	slurm_enable_rsyslog_client: false
-	rsyslog_server_hostname: "{{ groups['slurm-master'][0] }}"
-	rsyslog_client_tcp_host: "{{ rsyslog_server_hostname }}"
+	rsyslog_server_hostname: "{% raw %}{{ groups['slurm-master'][0] }}{% endraw %}"
+	rsyslog_client_tcp_host: "{% raw %}{{ rsyslog_server_hostname }}{% endraw %}"
 	rsyslog_client_group: "slurm-cluster"
 	```
 
@@ -628,7 +628,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#
 	# Configure hostnames, /etc/hosts
 	- include: generic/hosts.yml
-	when: "{{ slurm_configure_etc_hosts | default(true) }}"
+	when: "{% raw %}{{ slurm_configure_etc_hosts | default(true) }}{% endraw %}"
 	tags:
 	- set-etc-hosts
 	#
@@ -643,11 +643,11 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	## Set up NGINX-based container caching
 	#- include: container/nginx-docker-registry-cache-server.yml
 	#  vars:
-	#    hostlist: "{{ nginx_docker_cache_hostgroup | default('slurm-cache') }}"
+	#    hostlist: "{% raw %}{{ nginx_docker_cache_hostgroup | default('slurm-cache') }}{% endraw %}"
 	#  when: slurm_enable_nginx_docker_cache | default(false)
 	#- include: container/nginx-docker-registry-cache-client.yml
 	#  vars:
-	#    hostlist: "{{ nginx_docker_cache_clients | default('slurm-node') }}"
+	#    hostlist: "{% raw %}{{ nginx_docker_cache_clients | default('slurm-node') }}{% endraw %}"
 	#  when: slurm_enable_nginx_docker_cache | default(false)
 	#
 	## Install NVIDIA driver
@@ -659,7 +659,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	##   appropriate flag to this playbook as well.
 	#- include: nvidia-software/nvidia-cuda.yml
 	#  vars:
-	#     cuda_playbook_install_driver: "{{ slurm_cluster_install_nvidia_driver }}"
+	#     cuda_playbook_install_driver: "{% raw %}{{ slurm_cluster_install_nvidia_driver }}{% endraw %}"
 	#  when: slurm_cluster_install_cuda|default(true)
 	#
 	## Install software
@@ -668,11 +668,11 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	## Set up NFS filesystem
 	#- include: generic/nfs-server.yml
 	#  vars:
-	#    hostlist: "{{ nfs_server_group | default('slurm-nfs[0]') }}"
+	#    hostlist: "{% raw %}{{ nfs_server_group | default('slurm-nfs[0]') }}{% endraw %}"
 	#  when: slurm_enable_nfs_server
 	#- include: generic/nfs-client.yml
 	#  vars:
-	#    hostlist: "{{ nfs_client_group | default('slurm-nfs-client') }}"
+	#    hostlist: "{% raw %}{{ nfs_client_group | default('slurm-nfs-client') }}{% endraw %}"
 	#  when: slurm_enable_nfs_client_nodes
 	#
 	## Install DCGM
@@ -697,23 +697,23 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	## Install the NVIDIA HPC SDK
 	#- include: nvidia-software/nvidia-hpc-sdk.yml
 	#  vars:
-	#    hostlist: "{{ sm_install_host | default('slurm-login[0]')}}"
+	#    hostlist: "{% raw %}{{ sm_install_host | default('slurm-login[0]')}}{% endraw %}"
 	#  when: slurm_install_hpcsdk
 	#
 	# Install monitoring services
 	- include: slurm-cluster/prometheus.yml
 	vars:
-		hostlist: "{{ slurm_monitoring_group | default('slurm-metric') }}"
+		hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
 	when: slurm_enable_monitoring
 	- include: slurm-cluster/grafana.yml
 	vars:
-		hostlist: "{{ slurm_monitoring_group | default('slurm-metric') }}"
+		hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
 	when: slurm_enable_monitoring
 	#
 	## Install monitoring exporters
 	#- include: slurm-cluster/prometheus-slurm-exporter.yml
 	#  vars:
-	#    hostlist: "{{ slurm_monitoring_group | default('slurm-metric') }}"
+	#    hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
 	#  when: slurm_enable_monitoring
 	- include: slurm-cluster/prometheus-node-exporter.yml
 	when: slurm_enable_monitoring
@@ -723,11 +723,11 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	## Set up rsyslog forwarding from compute nodes to head node
 	#- include: generic/rsyslog-server.yml
 	#  vars:
-	#    hostlist: "{{ rsyslog_server_hostname | default('slurm-master[0]') }}"
+	#    hostlist: "{% raw %}{{ rsyslog_server_hostname | default('slurm-master[0]') }}{% endraw %}"
 	#  when: slurm_enable_rsyslog_server|default(true)
 	#- include: generic/rsyslog-client.yml
 	#  vars:
-	#    hostlist: "{{ rsyslog_client_group | default('slurm-node') }}"
+	#    hostlist: "{% raw %}{{ rsyslog_client_group | default('slurm-node') }}{% endraw %}"
 	#  when: slurm_enable_rsyslog_client|default(true)
 	#
 	## Install Singularity
