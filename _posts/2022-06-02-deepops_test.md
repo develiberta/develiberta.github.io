@@ -10,7 +10,7 @@ tags: [DevOps, Ansible]
 ## 목적
 ---
 1. deepops를 이용해서 필요한 환경을 구성할 수 있다.
-2. deepops가 설치하는 내용을 이해해서 deepops를 이용하지 않고 수동으로 설치할 수 있다.
+2. deepops를 이용해서 GPU 모니터링을 위한 prometheus, grafana 환경을 구성할 수 있다.
 
 ## 실천 목표
 ---
