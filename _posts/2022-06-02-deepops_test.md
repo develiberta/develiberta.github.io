@@ -63,7 +63,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	[all:vars]
 	# SSH User
 	# 다음을 추가
-	ansible_user=nvidia	# 위에서 생성한 사용자명
+	ansible_user=nvidia	# ansible을 이용할 사용자명
 	```
 	
 5. provisioning machine에서 deepops inventory가 정상적으로 동작하는지 확인한다.
