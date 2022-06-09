@@ -26,7 +26,7 @@ tags: [DevOps, Ansible]
 ## deepops를 이용한 테스트 환경 구성
 ---
 0. 테스트 구성도
-![deepops_test](/assets/img/posts/deepops_test.png)
+![deepops_test](/assets/img/illustrations/deepops_test.png)
 _Copyrightⓒ2022 Develiberta All rights reserved._
 
 - deepops 22.04.2 버전을 기준으로 작성되었다.
