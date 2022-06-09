@@ -48,7 +48,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	vi ./config/inventory
 	
 	[all]
-	# ☆ 다음을 추가
+	# ☆ 다음을 추가 (이때, 각 서버의 hostname과 IP를 동일하게 추가)
 	deepops-mp	ansible_host=192.168.30.119
 	deepops-w	ansible_host=192.168.30.121
 	
