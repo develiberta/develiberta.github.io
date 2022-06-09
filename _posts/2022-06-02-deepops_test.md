@@ -15,7 +15,7 @@ tags: [DevOps, Ansible]
 ## 실천 목표
 ---
 1. deepops를 이용해서 nvidia driver, docker, prometheus, grafana를 설치하고 모니터링한다.
-2. deepops를 이용해서 (nvidia driver, docker 설치는 되어 있다고 가정하고★) prometheus, grafana를 설치하고 모니터링한다.
+2. deepops를 이용해서 (nvidia driver, docker 설치는 되어 있다고 가정하고 ★) prometheus, grafana를 설치하고 모니터링한다.
 
 ## deepops 개요
 ---
@@ -29,6 +29,7 @@ tags: [DevOps, Ansible]
 _Copyrightⓒ2022 Develiberta All rights reserved._
 - 테스트는 deepops 22.04.2 버전을 기준으로 작성되었으며, OS는 Ubuntu 20.04 LTS를 설치했다.
 - master 노드에 gpu가 있는 경우, provisioning 노드와 master 노드를 하나의 서버로 통합하지 않는다. (위의 그림처럼 하는 경우 별도의 작업 필요) 왜냐하면 provisioning machine에서 각 노드에 필요한 프로그램을 설치하는 과정에서 재부팅이 되기 때문이다.
+- 파일 내에서 추가나 변경 또는 삭제가 필요한 부분은 ☆로 표시했다.
 
 2. 모든 노드에 지원되는 OS를 설치한다. 지원되는 OS는 다음과 같다.
 - NVIDIA DGX OS 4, 5
@@ -47,22 +48,22 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	vi ./config/inventory
 	
 	[all]
-	# 다음을 추가
+	# ☆ 다음을 추가
 	deepops-mp	ansible_host=192.168.30.119
 	deepops-w	ansible_host=192.168.30.121
 	
 	[slurm-master]
-	# 다음을 추가
+	# ☆ 다음을 추가
 	deepops-mp	# master 노드
 	
 	[slurm-node]
-	# 다음을 추가
+	# ☆ 다음을 추가
 	deepops-mp	# master 노드에 대해서도 모니터링하고자 하는 경우에만 추가
 	deepops-w	# worker 노드
 	
 	[all:vars]
 	# SSH User
-	# 다음을 추가
+	# ☆ 다음을 추가
 	ansible_user=nvidia	# ansible을 이용할 사용자명
 	```
 	
@@ -118,6 +119,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	- 3.pool.ntp.org
 	
 	# Set hostname based on inventory file
+	# ☆ 다음을 변경 : 서버의 호스트명을 임의로 변경하지 않고, ansible에서의 호스트명을 서버의 호스트명으로 수동으로 맞추도록 함 (inventory 파일에서 수행)
 	deepops_set_hostname: false
 	
 	################################################################################
@@ -357,6 +359,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	openmpi_version: 4.0.3
 	
 	# Disable cloud-init
+	# ☆ 다음을 변경
 	deepops_disable_cloud_init: false
 	
 	# Default profile when using NVIDIA MIG Manager: https://github.com/NVIDIA/mig-parted
@@ -367,6 +370,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	################################################################################
 	# Container registry                                                           #
 	################################################################################
+	# ☆ 다음을 변경
 	standalone_container_registry_cache_enable: false
 	standalone_container_registry_port: "5000"
 	
@@ -446,7 +450,9 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	################################################################################
 	slurm_configure_etc_hosts: yes
 	dns_mode: none
+	# ☆ 다음을 변경
 	slurm_cluster_install_cuda: no
+	# ☆ 다음을 변경
 	slurm_cluster_install_nvidia_driver: no
 	slurm_cluster_install_singularity: no
 	
@@ -473,8 +479,10 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	
 	# Flags for enable/disable of NFS deployment
 	#  - Set up an NFS server on nfs-server?
+	# ☆ 다음을 변경
 	slurm_enable_nfs_server: false
 	#  - Mount NFS filesystems on nfs-clients?
+	# ☆ 다음을 변경
 	slurm_enable_nfs_client_nodes: false
 	
 	# Inventory host groups to use for NFS server or clients
@@ -485,6 +493,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	# SOFTWARE MODULES (SM)                                                        #
 	#   May be built with either EasyBuild or Spack                                #
 	################################################################################
+	# ☆ 다음을 변경
 	slurm_install_lmod: false
 	
 	# Note: the sm_prefix must be in an NFS-shared location
@@ -513,6 +522,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	################################################################################
 	# NVIDIA HPC SDK                                                               #
 	################################################################################
+	# ☆ 다음을 변경
 	slurm_install_hpcsdk: false
 	
 	# Select the version of HPC SDK to download
@@ -523,6 +533,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	
 	# In a Slurm cluster, default to setting up HPC SDK as modules rather than in
 	# the default user environment
+	# ☆ 다음을 변경
 	hpcsdk_install_as_modules: false
 	hpcsdk_install_in_path: false
 	
@@ -562,13 +573,16 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	################################################################################
 	# Enroot & Pyxis                                                               #
 	################################################################################
+	# ☆ 다음을 변경
 	slurm_install_enroot: false
+	# ☆ 다음을 변경
 	slurm_install_pyxis: false
 	slurm_pyxis_version: 0.11.1
 	
 	################################################################################
 	# Node Health Check                                                            #
 	################################################################################
+	# ☆ 다음을 변경
 	slurm_install_nhc: no
 	slurm_health_check_program: "/usr/sbin/nhc"
 	
@@ -586,6 +600,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	################################################################################
 	# Container registry                                                           #
 	################################################################################
+	# ☆ 다음을 변경
 	slurm_enable_container_registry: false
 	docker_insecure_registries: "{% raw %}{{ groups['slurm-master'] | map('regex_replace', '^(.*)$', '\\1:5000') | list + ['registry.local:31500'] }}{% endraw %}"
 	docker_registry_mirrors: "{% raw %}{{ groups['slurm-master'] | map('regex_replace', '^(.*)$', 'http://\\1:5000') | list }}{% endraw %}"
@@ -602,7 +617,9 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	################################################################################
 	# Logging with rsyslog                                                         #
 	################################################################################
+	# ☆ 다음을 변경
 	slurm_enable_rsyslog_server: false
+	# ☆ 다음을 변경
 	slurm_enable_rsyslog_client: false
 	rsyslog_server_hostname: "{% raw %}{{ groups['slurm-master'][0] }}{% endraw %}"
 	rsyslog_client_tcp_host: "{% raw %}{{ rsyslog_server_hostname }}{% endraw %}"
@@ -612,7 +629,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 8. provisioning machine에서 deepops slurm-cluster 설치 정보를 수정한다.
 	```shell
 	vi ./playbooks/slurm-cluster.yml
-	
+	# ☆ 다음을 변경 (모두 주석 처리 후, 3개 부분만 주석 해제)
 	#---
 	## Slurm Cluster Playbook
 	#
@@ -628,6 +645,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#  when: deepops_disable_cloud_init
 	#
 	# Configure hostnames, /etc/hosts
+	# ☆ 다음을 주석 처리 해제
 	- include: generic/hosts.yml
 	when: "{% raw %}{{ slurm_configure_etc_hosts | default(true) }}{% endraw %}"
 	tags:
@@ -702,6 +720,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#  when: slurm_install_hpcsdk
 	#
 	# Install monitoring services
+	# ☆ 다음을 주석 처리 해제
 	- include: slurm-cluster/prometheus.yml
 	vars:
 		hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
@@ -716,6 +735,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#  vars:
 	#    hostlist: "{% raw %}{{ slurm_monitoring_group | default('slurm-metric') }}{% endraw %}"
 	#  when: slurm_enable_monitoring
+	# ☆ 다음을 주석 처리 해제
 	- include: slurm-cluster/prometheus-node-exporter.yml
 	when: slurm_enable_monitoring
 	- include: slurm-cluster/nvidia-dcgm-exporter.yml
@@ -757,11 +777,12 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#    - nvidia-peer-memory
 	```
 
-9. (Optional: nvidia driver, docker 설치는 되어 있다고 가정하는 경우★) provisioning machine에서 deepops nvidia-dcgm-exporter 설치 정보를 수정한다.
+9. (Optional: nvidia driver, docker 설치는 되어 있다고 가정하는 경우 ★) provisioning machine에서 deepops nvidia-dcgm-exporter 설치 정보를 수정한다.
 	```shell
 	vi ./playbooks/slurm-cluster/nvidia-dcgm-exporter.yml
 	
 	---
+	# ☆ 다음을 주석 처리
 	#- include: ../container/docker.yml
 	#- include: ../nvidia-software/nvidia-driver.yml
 	#- include: ../container/nvidia-docker.yml
