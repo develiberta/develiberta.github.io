@@ -765,6 +765,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	```
 
 ## 접속
+---
 1. master 노드의 node-exporter 192.168.30.119:9100/metrics
 2. master 노드의 dcgm-exporter 192.168.30.119:9400/metrics
 3. worker 노드의 node-exporter 192.168.30.121:9100/metrics
@@ -773,5 +774,6 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 6. master 노드의 graphana 192.168.30.119:3000
 
 ## 참고
+---
 1. Slurm Deployment Guide
 	https://github.com/NVIDIA/deepops/tree/master/docs/slurm-cluster
