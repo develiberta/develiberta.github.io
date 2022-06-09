@@ -14,8 +14,8 @@ tags: [DevOps, Ansible]
 
 ## 실천 목표
 ---
-1. deepops를 이용해서 nvidia driver, docker, prometheus, graphana를 설치하고 모니터링한다.
-2. deepops를 이용해서 (nvidia driver, docker 설치는 되어 있다고 가정하고★) prometheus, graphana를 설치하고 모니터링한다.
+1. deepops를 이용해서 nvidia driver, docker, prometheus, grafana를 설치하고 모니터링한다.
+2. deepops를 이용해서 (nvidia driver, docker 설치는 되어 있다고 가정하고★) prometheus, grafana를 설치하고 모니터링한다.
 
 ## deepops 개요
 ---
@@ -794,7 +794,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 3. worker 노드의 node-exporter - 192.168.30.121:9100/metrics
 4. worker 노드의 dcgm-exporter - 192.168.30.121:9400/metrics
 5. master 노드의 prometheus - 192.168.30.119:9090/graph
-6. master 노드의 graphana - 192.168.30.119:3000
+6. master 노드의 grafana - 192.168.30.119:3000
 
 ## 참고
 ---
