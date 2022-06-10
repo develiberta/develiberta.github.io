@@ -36,14 +36,14 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 - Ubuntu 18.04 LTS, 20.04 LTS
 - CentOS 7, 8
 
-3. provisioning machine에서 기본적인 deepops를 설치한다.
+3. provisioning 노드에서 기본적인 deepops를 설치한다.
 	```console
 	$ git clone https://github.com/NVIDIA/deepops.git
 	$ cd deepops
 	$ ./scripts/setup.sh
 	```
 
-4. provisioning machine에서 deepops inventory를 수정한다.
+4. provisioning 노드에서 deepops inventory를 수정한다.
 	```console
 	$ vi ./config/inventory
 	```
@@ -68,12 +68,12 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	ansible_user=nvidia	# ansible을 이용할 사용자명
 	```
 	
-5. provisioning machine에서 deepops inventory가 정상적으로 동작하는지 확인한다.
+5. provisioning 노드에서 deepops inventory가 정상적으로 동작하는지 확인한다.
 	```console
 	$ ansible all -m raw -a "hostname" -k
 	```
 
-6. provisioning machine에서 deepops 전체 설정 정보를 수정한다.
+6. provisioning 노드에서 deepops 전체 설정 정보를 수정한다.
 	```console
 	$ vi ./config/group_vars/all.yml
 	```
@@ -390,7 +390,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	ngc_ready_tensorflow: "nvcr.io/nvidia/tensorflow:18.10-py3"
 	```
 
-7. provisioning machine에서 deepops slurm-cluster 설정 정보를 수정한다.
+7. provisioning 노드에서 deepops slurm-cluster 설정 정보를 수정한다.
 	```console
 	$ vi ./config/group_vars/slurm-cluster.yml
 	```
@@ -629,7 +629,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	rsyslog_client_group: "slurm-cluster"
 	```
 
-8. provisioning machine에서 deepops slurm-cluster 설치 정보를 수정한다.
+8. provisioning 노드에서 deepops slurm-cluster 설치 정보를 수정한다.
 	```console
 	$ vi ./playbooks/slurm-cluster.yml
 	```
@@ -782,7 +782,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#    - nvidia-peer-memory
 	```
 
-9. (Optional: nvidia driver, docker 설치는 되어 있다고 가정하는 경우 ★) provisioning machine에서 deepops nvidia-dcgm-exporter 설치 정보를 수정한다.
+9. (Optional: nvidia driver, docker 설치는 되어 있다고 가정하는 경우 ★) provisioning 노드에서 deepops nvidia-dcgm-exporter 설치 정보를 수정한다.
 	```console
 	$ vi ./playbooks/slurm-cluster/nvidia-dcgm-exporter.yml
 	```
