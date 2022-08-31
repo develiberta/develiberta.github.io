@@ -814,7 +814,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	# NOTE: If SSH requires a password, add: `-k`
 	# NOTE: If sudo on remote machine requires a password, add: `-K`
 	# NOTE: If SSH user is different than current user, add: `-u ubuntu`
-	$ ansible-playbook --ask-become-pass -k -l slurm-cluster playbooks/slurm-cluster.yml
+	$ ansible-playbook -kK -l slurm-cluster playbooks/slurm-cluster.yml
 	```
 
 ## 접속
