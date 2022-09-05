@@ -85,7 +85,7 @@ tags: [CS, OS]
 9. Operating System As a Program 프로그램으로서의 운영체제
 	- Operating system
 	- is a program running at all times on the computer
-	- to provide system serices to application programs
+	- to provide system services to application programs
 	- to manage processes★, resources, user inerfaces, and so on.
 
 10. (다시 음미하기) Operating System 운영체제
