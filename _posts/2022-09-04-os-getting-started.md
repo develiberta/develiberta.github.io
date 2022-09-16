@@ -80,7 +80,7 @@ tags: [CS, OS]
 ## 테스트 : 리눅스 시스템 프로그래밍
 ---
 1. hello_thread.c 파일 생성 (C/C++ Extension Pack 플러그인 팝업이 뜨면 설치 진행)
-	```cpp
+	```c
 	#include <stdio.h>
 	#include <unistd.h>
 	#include <sys/wait.h>
