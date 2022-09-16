@@ -38,10 +38,12 @@ tags: [CS, OS]
 		- CPU (Central Processing Unit, 중앙처리장치) 1개+
 		- 각 장치에 대한 장치 컨트롤러
 		- 시스템 버스
-		
+
+```		
 2. 다시 보는 운영체제의 역할, 특히 시스템 관점
 	1. 자원 할당자 : 효율적이고 공정하게 자원 할당 결정
 	2. 제어 프로그램 : 부적절한 사용 방지 위해 사용자 프로그램의 수행 제어
+```
 	
 3. 위의 역할, 운영체제가 어떻게?
 	1. 일단 운영체제가 메모리에 적재되어야 : 부트스트랩(bootstrap) 프로그램
@@ -59,6 +61,7 @@ tags: [CS, OS]
 		- ![2022-09-16-os-introduction-04](/assets/img/illustrations/2022-09-16-os-introduction-04.png)
 		
 4. 옛날에 전형적이었던 컴퓨터 시스템의 구성 vs 요즘 전형적인 컴퓨터 시스템의 구성
+	```
 	1. 위에서 언급한 (옛날에 전형적이었던) 구성도
 		- Single Processor System
 		- ![2022-09-16-os-introduction-01](/assets/img/illustrations/2022-09-16-os-introduction-01.png)
@@ -71,6 +74,7 @@ tags: [CS, OS]
 		- Multiprocessor : 한 컴퓨터에 Processor(CPU)가 여러 개
 		- Multicore : 한 CPU에 Core가 여러 개
 			- ![2022-09-16-os-introduction-05](/assets/img/illustrations/2022-09-16-os-introduction-05.jpg)
+	```
 	3. 요즘 구성도
 		- Multi Processor System
 		- ![2022-09-16-os-introduction-06](/assets/img/illustrations/2022-09-16-os-introduction-06.jpg)
@@ -82,19 +86,38 @@ tags: [CS, OS]
 			- 메모리에 여러 프로세스를 적재하는 Multiprogramming(CPU가 항상 한 개의 작업은 실행할 수 있도록 함)가 선행되어야 함
 		- 이게 가능하면 CPU 1개로 메모리에 여러 OS를 적재할 수도 있는 것 아닌가 하는 의문
 			- 가상화(Virtualization)란 한 컴퓨터의 하드웨어를 추상화해서 여러 환경 속에서 수행될 수 있도록 하는 기술
-			- 이 때 사용되는 소프트웨어가 VMM(Virtaul Machine Manager)
+			- 이 때 사용되는 소프트웨어가 VMM(Virtaul Machine Manager, 가상 머신 관리자)
 				- (예) VMWare, XEN, WSL
 			- (a) 하나의 OS 사용 (b) 세 개의 가상머신 사용
-				- ![2022-09-16-os-introduction-08](/assets/img/illustrations/2022-09-16-os-introduction-08.emf)
+				- ![2022-09-16-os-introduction-08](/assets/img/illustrations/2022-09-16-os-introduction-08.png)
 
 ## 운영체제의 동작
 ---
 1. 사용자 모드 : 사용자가 응용 프로그램을 실행하는 모드
 
 2. 커널 모드 : 시스템 프로그램이 실행되는 모드
-	- 시스템 콜에 의해 사용자 모드에서 커널 모드로 전환
-	- 시스템 콜이 종료되면 커널 모드에서 사용자 모드로 전환
+
+3. 시스템 콜 : 사용자 모드와 커널 모드를 상호 전환하도록 하는 인터페이스
+	- 시스템 콜은 OS의 API로 일종의 인터페이스인데, 이 인터페이스는 (현재 가용한) OS 서비스로 연결됨
+	- 시스템 콜에 의해 사용자 모드에서 커널 모드로 전환됨
+	- 시스템 콜이 종료되면 커널 모드에서 사용자 모드로 전환됨
 	- ![2022-09-16-os-introduction-07](/assets/img/illustrations/2022-09-16-os-introduction-07.png)
+	- 대부분의 언어에서는 표준 라이브러리에 시스템 콜 수행을 위한 함수를 포함하며, 이를 이용해서 간단하게 시스템 콜하는 코드 작성 가능
+		- (예) printf(), fork(), wait()
+		
+## 그래서, 운영체제의 역할
+---
+```
+1. 사용자 관점
+	- 사용의 용이성 : 사용자가 수행하는 작업을 최대화
+
+2. 시스템 관점
+	- 자원 할당자 : 효율적이고 공정하게 자원 할당 결정
+	- 제어 프로그램 : 부적절한 사용 방지 위해 사용자 프로그램의 수행 제어
+```
+![2022-09-16-os-introduction-09](/assets/img/illustrations/2022-09-16-os-introduction-09.jpg)
+
+	
 
 ## 참고
 ---
