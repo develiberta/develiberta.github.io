@@ -73,14 +73,18 @@ tags: [CS, OS]
 
 ## 접속 : Windows에서 VSCode 이용해서 Ubuntu에 원격으로 접속
 ---
-1. VSCode 좌측 하단 구석에서 "원격 창 열기" 클릭
-2. "Remote - WSL: New Window" 선택
+1. VSCode 좌측 하단 구석에서 "원격 창 열기" 아이콘 >< 클릭
+2. "Remote - WSL: New Window" 또는 "New WSL Window" 선택
 3. 좌측 탐색기 > 폴더 열기 > 홈 디렉토리가 열림 > (Ubuntu에서) 새 디렉토리 만들고 경로 잡은 후 연결
 
 ## 테스트 : 리눅스 시스템 프로그래밍
 ---
-1. hello_thread.c 파일 생성
+1. hello_thread.c 파일 생성 (C/C++ Extension Pack 플러그인 팝업이 뜨면 설치 진행)
 	```cpp
+	#include <stdio.h>
+	#include <unistd.h>
+	#include <sys/wait.h>
+	
 	int main()
 	{
 		pid_t pid;
@@ -89,7 +93,7 @@ tags: [CS, OS]
 		return 0;
 	}
 	```
-2. hello_thread.c 컴파일
+2. (상단 View 메뉴에서 Terminal 을 선택해서 나타나게 한 후) hello_thread.c 컴파일
 	```console
 	gcc -pthread hello_thread.c
 	```
