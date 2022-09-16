@@ -32,7 +32,7 @@ tags: [CS, OS]
 ---
 1. 전형적인 컴퓨터 시스템의 구성
 	1. 구성도
-		- ![2022-09-16-os-introduction-01](/assets/img/illustrations/2022-09-16-os-introduction-01.png)
+		![2022-09-16-os-introduction-01](/assets/img/illustrations/2022-09-16-os-introduction-01.png)
 	2. 구성요소
 		- CPU (Central Processing Unit, 중앙처리장치) 1개+
 		- 각 장치에 대한 장치 컨트롤러
@@ -52,17 +52,17 @@ tags: [CS, OS]
 				- 용량, 접근 속도에 따른 위계 구조
 				- EEP ROM과 RAM은 main memory에 포함되는 개념
 				- 하지만 보통 memory, main memory 라는 용어는 RAM만 지칭
-				- ![2022-09-16-os-introduction-02](/assets/img/illustrations/2022-09-16-os-introduction-02.jpg)
+				![2022-09-16-os-introduction-02](/assets/img/illustrations/2022-09-16-os-introduction-02.jpg)
 	2. 운영체제가 하드웨어의 신호를 받을 수도 있어야 : 인터럽트(interrupt)
 		- 운영체제와 하드웨어(특히 입출력 장치)의 상호 작용 방식의 핵심
 		- 장치의 작업이 완료되면 장치 컨트롤러는 장치 드라이버(운영체제의 일부)에 작업 완료 신호(=인터럽트) 전송
-		- ![2022-09-16-os-introduction-03](/assets/img/illustrations/2022-09-16-os-introduction-03.jpg)
-		- ![2022-09-16-os-introduction-04](/assets/img/illustrations/2022-09-16-os-introduction-04.png)
+		![2022-09-16-os-introduction-03](/assets/img/illustrations/2022-09-16-os-introduction-03.jpg)
+		![2022-09-16-os-introduction-04](/assets/img/illustrations/2022-09-16-os-introduction-04.png)
 		
 4. 옛날에 전형적이었던 컴퓨터 시스템의 구성 vs 요즘 전형적인 컴퓨터 시스템의 구성
 	1. 위에서 언급한 (옛날에 전형적이었던) 구성도
 		- Single Processor System
-		- ![2022-09-16-os-introduction-01](/assets/img/illustrations/2022-09-16-os-introduction-01.png)
+		![2022-09-16-os-introduction-01](/assets/img/illustrations/2022-09-16-os-introduction-01.png)
 		- 1 CPU 1 Memory
 		- 더이상 사용하지 않음
 	2. 요즘 구성도를 보기 전에 용어 설명
@@ -71,10 +71,10 @@ tags: [CS, OS]
 		- Core : CPU의 구성요소로, CPU의 기본 계산 단위 (명령을 실행하고, 레지스터를 이용해 로컬에 데이터를 저장)
 		- Multiprocessor : 한 컴퓨터에 Processor(CPU)가 여러 개
 		- Multicore : 한 CPU에 Core가 여러 개
-			- ![2022-09-16-os-introduction-05](/assets/img/illustrations/2022-09-16-os-introduction-05.jpg)
+			![2022-09-16-os-introduction-05](/assets/img/illustrations/2022-09-16-os-introduction-05.jpg)
 	3. 요즘 구성도
 		- Multi Processor System
-		- ![2022-09-16-os-introduction-06](/assets/img/illustrations/2022-09-16-os-introduction-06.jpg)
+		![2022-09-16-os-introduction-06](/assets/img/illustrations/2022-09-16-os-introduction-06.jpg)
 		- 특히 보편적인 것은 (위의 그림과 같은) Symmetric Multi Processing(SMP)
 			- 보통 이를 Multiprocessing이라고 지칭
 			- 각 CPU는 (특정한 작업만 담당하는 게 아니라) 모든 작업을 수행 가능
@@ -86,7 +86,7 @@ tags: [CS, OS]
 			- 이 때 사용되는 소프트웨어가 VMM(Virtaul Machine Manager, 가상 머신 관리자)
 				- (예) VMWare, XEN, WSL
 			- (a) 하나의 OS 사용 (b) 세 개의 가상머신 사용
-				- ![2022-09-16-os-introduction-08](/assets/img/illustrations/2022-09-16-os-introduction-08.png)
+			![2022-09-16-os-introduction-08](/assets/img/illustrations/2022-09-16-os-introduction-08.png)
 
 ## 운영체제의 동작
 ---
@@ -98,7 +98,7 @@ tags: [CS, OS]
 	- 시스템 콜은 OS의 API로 일종의 인터페이스인데, 이 인터페이스는 (현재 가용한) OS 서비스로 연결됨
 	- 시스템 콜에 의해 사용자 모드에서 커널 모드로 전환됨
 	- 시스템 콜이 종료되면 커널 모드에서 사용자 모드로 전환됨
-	- ![2022-09-16-os-introduction-07](/assets/img/illustrations/2022-09-16-os-introduction-07.png)
+	![2022-09-16-os-introduction-07](/assets/img/illustrations/2022-09-16-os-introduction-07.png)
 	- 대부분의 언어에서는 표준 라이브러리에 시스템 콜 수행을 위한 함수를 포함하며, 이를 이용해서 간단하게 시스템 콜하는 코드 작성 가능
 		- (예) printf(), fork(), wait()
 		
@@ -125,3 +125,5 @@ tags: [CS, OS]
 	https://www.inflearn.com/course/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%84%EA%B3%B5%EA%B0%95%EC%9D%98/dashboard
 	
 2. 운영체제 제 10판 | Abraham Silberschatz, Peter Baer Galvin, Greg Gagne 저/박민규 역 | 퍼스트북 | 2020년 02월 28일
+3. 운영체제 제 10판 솔루션
+	https://codex.cs.yale.edu/avi/os-book/OS10/practice-exercises/index-solu.html
