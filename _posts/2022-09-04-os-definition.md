@@ -23,7 +23,7 @@ tags: [CS, OS]
 ---
 1. Operating System 운영체제
 	- An operating system is
-	- a software that operates a computer system
+	- a software(program) that operates a computer system
 
 2. Computer 컴퓨터
 	- A computer is
@@ -90,7 +90,7 @@ tags: [CS, OS]
 
 10. (다시 음미하기) Operating System 운영체제
 	- An operating system is
-	- a software that operates a computer system
+	- a software(program) that operates a computer system
 
 ## 참고
 ---
