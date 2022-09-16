@@ -39,7 +39,7 @@ tags: [CS, OS]
 		- 시스템 버스
 
 ```		
-2. 다시 보는 운영체제의 역할, 특히 시스템 관점
+- 다시 보는 운영체제의 역할, 특히 시스템 관점
 	1. 자원 할당자 : 효율적이고 공정하게 자원 할당 결정
 	2. 제어 프로그램 : 부적절한 사용 방지 위해 사용자 프로그램의 수행 제어
 ```
@@ -60,7 +60,6 @@ tags: [CS, OS]
 		- ![2022-09-16-os-introduction-04](/assets/img/illustrations/2022-09-16-os-introduction-04.png)
 		
 4. 옛날에 전형적이었던 컴퓨터 시스템의 구성 vs 요즘 전형적인 컴퓨터 시스템의 구성
-	```
 	1. 위에서 언급한 (옛날에 전형적이었던) 구성도
 		- Single Processor System
 		- ![2022-09-16-os-introduction-01](/assets/img/illustrations/2022-09-16-os-introduction-01.png)
@@ -73,7 +72,6 @@ tags: [CS, OS]
 		- Multiprocessor : 한 컴퓨터에 Processor(CPU)가 여러 개
 		- Multicore : 한 CPU에 Core가 여러 개
 			- ![2022-09-16-os-introduction-05](/assets/img/illustrations/2022-09-16-os-introduction-05.jpg)
-	```
 	3. 요즘 구성도
 		- Multi Processor System
 		- ![2022-09-16-os-introduction-06](/assets/img/illustrations/2022-09-16-os-introduction-06.jpg)
