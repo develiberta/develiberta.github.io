@@ -18,7 +18,7 @@ tags: [CS, OS]
 ## 환경 구성
 ---
 1. 환경 구성도
-	![deepops_test](/assets/img/illustrations/2022-09-04-os-getting-started-01.jpg)
+	![2022-09-04-os-getting-started-01](/assets/img/illustrations/2022-09-04-os-getting-started-01.jpg)
 	_Copyrightⓒ2022 Develiberta All rights reserved._
 
 2. 시스템 요구사항 확인 : Windows 10 x64
@@ -50,7 +50,7 @@ tags: [CS, OS]
 	PS C:\Windows\system32> wsl --set-default-version 2
 	PS C:\Windows\system32> wsl -l -v
 	```
-	![deepops_test](/assets/img/illustrations/2022-09-04-os-getting-started-02.jpg)
+	![2022-09-04-os-getting-started-02](/assets/img/illustrations/2022-09-04-os-getting-started-02.jpg)
 	_Copyrightⓒ2022 Develiberta All rights reserved._
 
 7. Ubuntu에서 GNU 툴체인 설치
@@ -101,10 +101,10 @@ tags: [CS, OS]
 	```console
 	./a.out
 	```
-	![deepops_test](/assets/img/illustrations/2022-09-04-os-getting-started-03.jpg)
+	![2022-09-04-os-getting-started-03](/assets/img/illustrations/2022-09-04-os-getting-started-03.jpg)
 	_Copyrightⓒ2022 Develiberta All rights reserved._
 
 ## 참고
 ---
-1. 인프런 운영체제 공룡책 강의 (주니온)
+1. 운영체제 공룡책 강의 | 주니온 | 인프런
 	https://www.inflearn.com/course/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%84%EA%B3%B5%EA%B0%95%EC%9D%98/dashboard

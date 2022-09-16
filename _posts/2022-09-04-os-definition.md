@@ -35,7 +35,7 @@ tags: [CS, OS]
 	- 즉, 불확실성을 측정해서 양적으로 표현한 것
 	- How? 클로드 섀넌
 		- 클로드 섀넌(Claude Shannon)은 정보에 대해 수학적으로 정의
-			![deepops_test](/assets/img/illustrations/2022-09-04-os-definition.jpg)
+			![2022-09-04-os-definition](/assets/img/illustrations/2022-09-04-os-definition.jpg)
 			_Copyrightⓒ2022 Develiberta All rights reserved._
 
 4. Process 처리
@@ -94,5 +94,5 @@ tags: [CS, OS]
 
 ## 참고
 ---
-1. 인프런 운영체제 공룡책 강의 (주니온)
+1. 운영체제 공룡책 강의 | 주니온 | 인프런
 	https://www.inflearn.com/course/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%84%EA%B3%B5%EA%B0%95%EC%9D%98/dashboard
