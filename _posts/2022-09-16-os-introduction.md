@@ -68,9 +68,10 @@ tags: [CS, OS]
 			![2022-09-16-os-introduction-05](/assets/img/illustrations/2022-09-16-os-introduction-05.jpg)
 	3. 요즘 구성도
 		- Multi Processor System
+		- Multi Processor는 Multi Processing을 수행 (Multi Processing은 Multi Processor에서 파생된 용어)
 		![2022-09-16-os-introduction-06](/assets/img/illustrations/2022-09-16-os-introduction-06.jpg)
-		- 특히 보편적인 것은 (위의 그림과 같은) Symmetric Multi Processing(SMP)
-			- 보통 이를 Multiprocessing이라고 지칭
+		- 이떄 보편적인 것은 (위의 그림과 같은) Symmetric Multi Processing(SMP)
+			- 보통 이를 그냥 Multiprocessing이라고 지칭
 			- 각 CPU는 (특정한 작업만 담당하는 게 아니라) 모든 작업을 수행 가능
 			- CPU가 하나의 작업만 도맡아 하는 게 아니므로, 작업들은 모든 CPU에 의해 처리되며 빈번하게 문맥 교환 발생
 			- 문맥 교환 시 어떤 작업을 먼저 처리할지(즉, 어떤 작업에 자원을 먼저 할당할지) 결정하는 게 CPU 스케줄링 : 운영체제의 역할 중 하나
