@@ -38,9 +38,9 @@ tags: [CS, OS]
 		- 각 장치에 대한 장치 컨트롤러
 		- 시스템 버스
 	
-2. 위의 역할, 운영체제가 어떻게?
+2. 위에서 운영체제의 역할, 운영체제가 어떻게?
 	1. 일단 운영체제가 메모리에 적재되어야 : 부트스트랩(bootstrap) 프로그램
-		- EEP ROM(비휘발성)에 저장되어 있는 프로그램
+		- EEP ROM(Electrically Erasable Programmable Read-Only Memory, 비휘발성)에 저장되어 있는 프로그램
 		- 컴퓨터에 전원이 공급되면 HDD에 존재하는 OS를 메모리(RAM, Random Access Memory, 휘발성)에 적재 (이후에 이를 CPU가 fetch-execute)
 			- 참고 : 저장 장치 구조
 				- 용량, 접근 속도에 따른 위계 구조
