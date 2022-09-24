@@ -1,5 +1,5 @@
 ---
-title: OS Introduction
+title: OS Process
 author: Develiberta
 date: 2022-09-24 14:30:00 +0900
 categories: [CS, OS]
