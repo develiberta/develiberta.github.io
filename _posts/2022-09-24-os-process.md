@@ -1,7 +1,7 @@
 ---
 title: OS Introduction
 author: Develiberta
-date: 2022-09-16 20:30:00 +0900
+date: 2022-09-24 14:30:00 +0900
 categories: [CS, OS]
 tags: [CS, OS]
 ---
