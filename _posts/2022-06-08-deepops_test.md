@@ -793,7 +793,7 @@ _Copyrightⓒ2022 Develiberta All rights reserved._
 	#- include: ../nvidia-software/nvidia-driver.yml
 	#- include: ../container/nvidia-docker.yml
 	
-	- hosts:  "{{ hostlist | default('all') }}"
+	- hosts:  "{% raw %}{{ hostlist | default('all') }}{% endraw %}"
 	become: yes
 	tasks:
 		- name: install custom facts module
