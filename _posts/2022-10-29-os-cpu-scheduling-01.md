@@ -60,15 +60,15 @@ tags: [CS, OS]
 	- CPU를 먼저 요청하는 프로세스가 CPU를 먼저 할당받음
 	- (예)
 		- 프로세스별 CPU 버스트 시간
-		![2022-10-29-os-cpu-scheduling-02](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-02.jpg)
+		![2022-10-29-os-cpu-scheduling-02](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-02.png)
 		- 0 밀리초에 P1, P2, P3 순으로 도착한 경우
 			- Gantt 차트
-				![2022-10-29-os-cpu-scheduling-03](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-03.jpg)
+				![2022-10-29-os-cpu-scheduling-03](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-03.png)
 			- average waiting time = (0 + 24 + 27) / 3 = 17
 			- average turnaround time = (24 + 27 + 30) / 3 = 81
 		- 0 밀리초에 P2, P3, P1 순으로 도착한 경우
 			- Gantt 차트
-				![2022-10-29-os-cpu-scheduling-04](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-04.jpg)
+				![2022-10-29-os-cpu-scheduling-04](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-04.png)
 			- average waiting time = (6 + 0 + 3) / 3 = 3
 			- average turnaround time = (30 + 3 + 6) / 3 = 13
 	- 프로세스의 도착 순서에 따라 성능 평가 결과의 편차가 큼
@@ -77,10 +77,10 @@ tags: [CS, OS]
 	- CPU가 이용 가능해지면, 가장 작은 다음 CPU 버스트를 가진 프로세스가 할당받음
 	- (예)
 		- 프로세스별 CPU 버스트 시간
-		![2022-10-29-os-cpu-scheduling-05](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-05.jpg)
+		![2022-10-29-os-cpu-scheduling-05](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-05.png)
 		- 0 밀리초에 P1, P2, P3, P4가 도착한 경우 (순서 무관)
 			- Gantt 차트
-				![2022-10-29-os-cpu-scheduling-06](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-06.jpg)
+				![2022-10-29-os-cpu-scheduling-06](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-06.png)
 			- average waiting time = (3 + 16 + 9 + 0) / 4 = 7
 			- average turnaround time = (9 + 24 + 16 + 3) / 4 = 13
 
