@@ -83,6 +83,31 @@ tags: [CS, OS]
 				![2022-10-29-os-cpu-scheduling-06](/assets/img/illustrations/2022-10-29-os-cpu-scheduling-06.png)
 			- average waiting time = (3 + 16 + 9 + 0) / 4 = 7
 			- average turnaround time = (9 + 24 + 16 + 3) / 4 = 13
+	- 기본적으로는 비선점(Nonpreemptive)
+	- 이지만 매 단위시간마다 남은 CPU 버스트 시간을 계산해서 컨텍스트 스위칭 여부를 판단하도록 하는 선점(Preemptive)도 가능
+		- 이를 SRTF, Shortest-Remaining-Time-First 스케줄링이라고 하기도 함
+3. 라운드 로빈 스케줄링 (RR, Round-Robin)
+	- 기본적으로 FCFS에 시분할을 적용해서 선점형(Preemptive)
+	- 미리 정한 time quantum이 지나면 Ready Queue에서 대기 중인 첫 번째 프로세스에게 CPU 할당
+	- time quantum에 따라 스케줄링 성능이 좌우됨
+		- time quantum이 무한대에 가까워지는 경우, FCFS와 동일
+	- 일반적으로 많이 사용하는 스케줄링
+4. 우선순위 기반 스케줄링
+	- 우선순위를 정해서 스케줄링하고, 우선순위가 같은 프로세스에 대해서는 FCFS 적용
+	- SJF도 사실상 우선순위 기반 스케줄링에 해당
+	- 우선순위를 정하는 다양한 방법에 따라 여러 가지 스케줄링 알고리즘이 있을 수 있음
+	- 우선순위 스케줄링은 선점형(Preemptive), 비선점형(Nonpreemptive) 모두 가능
+	- 이때 우선순위가 낮은 프로세스에 대해 기아(starvation) 현상이 생길 수 있는데, 이를 해결하는 방식으로는 대기 시간(waiting time)이 긴 프로세스에 대해 우선순위를 점진적으로 높여주는 aging 을 이용할 수 있음
+5. 다중 레벨 큐 스케줄링 (MLQ, Multi-Level Queue)
+	- 우선순위 별로 Ready Queue를 분리
+6. 다중 레벨 피드백 큐 스케줄링 (MLFQ, Multi-Level Feedback Queue)
+	- 우선순위 별로 Ready Queue를 분리하고 각 Ready Queue는 time quantum이 다르며, CPU 버스트 시간이 긴 프로세스에 대해서는 다른 레벨의 Ready Queue에 삽입하는 방법
+	- 실제 O/S의 스케줄링 알고리즘으로 많이 사용됨
+
+## 이제는 커널 스레드
+---
+- 이제까지 프로세스라고 배웠던 것은 이제 커널 스레드로 치환해서 생각
+		
 
 ## 참고
 ---
