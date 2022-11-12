@@ -1,5 +1,5 @@
 ---
-title: OS Synchronization Tools
+title: OS Synchronization Tools (1)
 author: Develiberta
 date: 2022-11-12 13:00:00 +0900
 categories: [CS, OS]
@@ -46,9 +46,11 @@ tags: [CS, OS]
 1. 상호 배제 (Mutual Exclusion) ★ 반드시 만족해야 하는 조건
 	- 프로세스가 자기의 임계 구역에서 실행된다면 다른 프로세스들은 그들 자신의 임계 구역에서 실행될 수 없음
 2. 진행 (Progress)
+	- 데드락 (Deadlock)을 피하기 위함
 	- 자신의 임계 구역에서 실행되는 프로세스가 없고, 그들 자신의 임계구역으로 진입하고자 하는 프로세스들이 있다면
 	- 그 프로세스들의 진입은 무한정 연기될 수 없음
 3. 한정된 대기 (Bounded Waiting)
+	- 기아 현상 (Starvation)을 피하기 위함
 	- 프로세스가 자신의 임계 구역에 진입하려는 요청을 한 후부터 그 요청이 허용될 때까지
 	- 다른 프로세스들이 그들 자신의 임계 구역이 진입하도록 허용되는 횟수에 한계가 있음
 
