@@ -246,40 +246,40 @@ tags: [CS, OS]
 - 위의 코드에서 프로세스가 critical section에 진입하기 위해 busy waiting이 발생하는데, 이는 1개의 CPU 코어를 여러 프로세스가 공유하는 멀티프로그래밍 시스템에서는 CPU 사이클을 낭비하여 문제가 됨
 - 그러나 CPU 코어가 여러 개인 경우 문맥 교환이 일어나지 않아서 문맥 교환에 사용되는 시간을 절약 가능 (이때는 busy waiting을 spinlock이라고 명명)
  ```c
- void *counter(void *param)
- {
-	int k;
-	for (k = 0; k < 10000; k++) {
-		/* entry section */
-		pthread_mutex_lock(&mutex);
+	void *counter(void *param)
+	{
+		int k;
+		for (k = 0; k < 10000; k++) {
+			/* entry section */
+			pthread_mutex_lock(&mutex);
 
-		/* critical section */
-		sum++;
+			/* critical section */
+			sum++;
 
-		/* exit section */
-		pthread_mutex_unlock(&mutex);
+			/* exit section */
+			pthread_mutex_unlock(&mutex);
+		}
+		pthread_exit(0);
 	}
-	pthread_exit(0);
- }
  ```
  ```c
- #include <stdio.h>
- #include <pthread.h>
+	#include <stdio.h>
+	#include <pthread.h>
 
- int sum = 0;	// a shared variable
+	int sum = 0;	// a shared variable
 
- pthread_mutex_t mutex;
+	pthread_mutex_t mutex;
 
- int main()
- {
-	pthread_t tid1, tid2;
-	pthread_mutex_init(&mutex, NULL);
-	pthread_create(&tid1, NULL, counter, NULL);
-	pthread_create(&tid2, NULL, counter, NULL);
-	pthread_join(tid1, NULL);
-	pthread_join(tid2, NULL);
-	printf("sum = %d\n", sum);
- }
+	int main()
+	{
+		pthread_t tid1, tid2;
+		pthread_mutex_init(&mutex, NULL);
+		pthread_create(&tid1, NULL, counter, NULL);
+		pthread_create(&tid2, NULL, counter, NULL);
+		pthread_join(tid1, NULL);
+		pthread_join(tid2, NULL);
+		printf("sum = %d\n", sum);
+	}
  ```
 
  ## 세마포어
@@ -442,9 +442,7 @@ tags: [CS, OS]
 			threads[i].join();
 		System.out.pripntln("counter = " + Counter.count);
 	}
-
-
-
+```
 
 ## 참고
 ---
