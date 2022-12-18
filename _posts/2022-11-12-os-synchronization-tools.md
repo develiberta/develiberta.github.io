@@ -10,10 +10,14 @@ tags: [CS, OS]
 ## 목적
 ---
 1. 협력적 프로세스가 동시에 데이터에 접근할 때 발생하는 문제를 이해한다.
+2. 임계구역 문제에 대한 하드웨어 해결책과 소프트웨어 해결책을 이해한다.
 
 ## 실천 목표
 ---
 1. 임계구역 문제를 설명하고 경쟁 조건(Race Condition)을 설명한다.
+2. 메모리 장벽, compare-and-swap 연산 및 원자적 변수를 사용하여 임계구역 문제에 대한 하드웨어 해결책을 설명한다.
+3. Mutex 락, 세마포어, 모니터 및 조건 변수를 사용하여 임계구역 문제를 해결하는 방법을 보인다.
+4. 적은, 중간 및 심한 경쟁 시나리오에서 임계구역 문제를 해결하는 도구를 평가한다.
 
 ## 기본적인 개념 정리
 --
@@ -136,6 +140,7 @@ tags: [CS, OS]
 
 ## 하드웨어 기반 해결책 - 원자적 변수 (Atomic Variables)
 ---
+- 하드웨어의 지원이 바탕이 되는 해결책
 - LOAD와 STORE하는 부분에 대해 문맥 교환이 발생하지 않도록 통합한 하나의 하드웨어 명령어를 이용해서
 - 기본적인 데이터 타입에 대해 쪼개어질 수 없는 연산이 정의된
 - 하나의 변수로,
@@ -212,11 +217,233 @@ tags: [CS, OS]
 ```
 
 
-## 임계 구역 문제 조건 중 '상호 배제'만 해결하는 해결책
+## 임계 구역 문제 조건 중 '상호 배제'만 해결하는 해결책 (소프트웨어적으로 운영체제나 프로그래밍 언어가 제공)
 ---
 1. 뮤텍스
 2. 세마포어
 3. 모니터
+
+## 뮤텍스
+---
+- mutual exclusion
+- 임계 구역을 보호해서 경쟁 조건을 방지하기 위해서 lock(열쇠의 비유)을 이용하는 방법
+- 프로세스가
+- critical section에 진입하기 전에 lock(열쇠의 비유)을 얻고 acquire()
+- critical section을 마치면서 lock(열쇠의 비유)을 다시 놓아주는 release() 방법
+- lock(열쇠의 비유)이 사용 가능한지 여부를 담는 available 변수 사용
+```java
+	acquire() {
+		while (!available)
+			; /* busy wait */
+		available = false;
+	}
+
+	release() {
+		available = true;
+	}
+```
+- 이때 acquire()와 release()는 atomically 원자적으로 수행되어야 함 (하드웨어적 지원을 이용)
+- 위의 코드에서 프로세스가 critical section에 진입하기 위해 busy waiting이 발생하는데, 이는 1개의 CPU 코어를 여러 프로세스가 공유하는 멀티프로그래밍 시스템에서는 CPU 사이클을 낭비하여 문제가 됨
+- 그러나 CPU 코어가 여러 개인 경우 문맥 교환이 일어나지 않아서 문맥 교환에 사용되는 시간을 절약 가능 (이때는 busy waiting을 spinlock이라고 명명)
+ ```c
+ void *counter(void *param)
+ {
+	int k;
+	for (k = 0; k < 10000; k++) {
+		/* entry section */
+		pthread_mutex_lock(&mutex);
+
+		/* critical section */
+		sum++;
+
+		/* exit section */
+		pthread_mutex_unlock(&mutex);
+	}
+	pthread_exit(0);
+ }
+ ```
+ ```c
+ #include <stdio.h>
+ #include <pthread.h>
+
+ int sum = 0;	// a shared variable
+
+ pthread_mutex_t mutex;
+
+ int main()
+ {
+	pthread_t tid1, tid2;
+	pthread_mutex_init(&mutex, NULL);
+	pthread_create(&tid1, NULL, counter, NULL);
+	pthread_create(&tid2, NULL, counter, NULL);
+	pthread_join(tid1, NULL);
+	pthread_join(tid2, NULL);
+	printf("sum = %d\n", sum);
+ }
+ ```
+
+ ## 세마포어
+ ---
+ - 세마포어 S는 사용자의 상황에 맞게 초기화 가능한 정수형 변수로,
+ - 오직 두 개의 표준적이고 원자적인 수행에 의해서 접근될 수 있는데,
+ - 이는 wait()와 signal() (또는 P()와 V())
+ - mutex가 열쇠가 하나였다면 세마포어는 열쇠가 한 개(Binary Semaphore) 또는 여러 개(Counting Semaphore)인 것으로, 이 열쇠의 개수가 S의 값
+```java
+	wait(S) {
+		while (S <= 0)
+			; /* busy wait */
+		S--;
+	}
+
+	signal() {
+		S++;
+	}
+```
+- 이때 wait()와 signal()는 atomically 원자적으로 수행되어야 함 (하드웨어적 지원을 이용)
+- S = 0 인 경우는 모든 리소스가 사용중인 상태를 의미
+- 프로세스 P1의 Statement S1과 프로세스 P2의 Statement S2에 대해서 S1이 끝난 이후에 S2가 실행되어야 한다면 S = 0으로 초기화 후 다음과 같이 수행 가능
+```c
+	S1;
+	signal(S);	// S++ 해서 S가 1이 됨
+```
+```c
+	wait(S);	// S가 0인 상태 - 위의 수행으로 S가 1이 되면 아래 명령이 실행됨
+	S2;
+```
+- 위에서 설명한 세마포어도 뮤텍스와 마찬가지로 busy waiting 문제를 가지고 있으므로 이를 해결하기 위해 대기큐를 이용할 수 있음 (모두 커널 레벨에서 구현하는 것)
+```c
+	typedef struct {
+		int value;	// 세마포어 값 S
+		struct process *list;
+	} semaphore;	// 세마포어 S에 대해 대기하고 있는 프로세스 리스트
+
+	wait(semaphore *S) {
+		S->value--;
+		if (S->value < 0) {
+			add this process to S->list;
+			sleep();
+		}
+	}
+
+	signal(semaphore *S) {
+		S->value++;
+		if (S->value <= 0) {
+			remove a process P from S->list;
+			wakeup(P);
+		}
+	}
+```
+```c
+	void *counter(void *param) {
+		int k;
+		for (k = 0; k < 10000; k++) {
+			/* entry section */
+			sem_wait(&sem);
+
+			/* critical section */
+			sum++;
+
+			/* exit section */
+			sem_post(&sem);
+
+			/* remainder section */
+	}
+	pthread_exit(0);
+```
+```c
+	#include <stdio.h>
+	#include <pthread.h>
+	#include <semaphore.h>
+
+	int sum = 0; // a shared variable
+
+	sem_t sem; // 세마포어 타입
+
+	int main()
+	{
+		pthread_t tid1, tid2;
+		sem_init(&sem, 0, 1); // 열쇠인 S가 총 1개
+		pthread_create(&tid1, NULL, counter, NULL);
+		pthread_create(&tid2, NULL, counter, NULL);
+		pthread_join(tid1, NULL);
+		pthread_join(tid2, NULL);
+		printf("sum = %d\n", sum);
+	}
+```
+
+## 모니터
+---
+- 뮤텍스와 세마포어가 편리하고 효과적이지만 timing errors(programming errors에 속함) 발생 가능
+- 이를 방지하기 위해서 높은 레벨로 동기화에 대한 구성을 갖춰놓은 monitor 도구 사용 가능
+- monitor은 프로그래밍 적으로 정의된 명령어의 집합으로 일종의 추상 데이터 형태 (클래스와 비슷)
+```c
+	monitor monitor_name
+	{
+		/* shared variable declarations */
+		function P1 ( , , , ) {
+			/* ... */
+		}
+		function P2 ( , , , ) {
+			/* ... */
+		}
+		/* ... */
+		function PN ( , , , ) {
+			/* ... */
+		}
+		initialization_code ( , , , ) {
+			/* ... */
+		}
+	}
+```
+- 위의 모니터 구조물이 충분하지 않으므로 부가적인 동기화 기법 정의
+```java
+	monitor monitor_name
+	{
+		conditional x, y;
+		x.wait();
+		x.notify();
+	}
+```
+- 더 간편하게는 java의 synchronized 키워드 사용
+```java
+	public class SynchExample4 {
+		static class Counter {
+			public static int count = 0;
+			public void increment() {
+				synchronized (this) {
+					Counter.count++;
+				}
+			}
+		}
+	}
+
+	static class MyRunnable implements Runnable {
+		Counter counter;
+		public MyRunnable(Counter counter) {
+			this.counter = counter;
+		}
+
+		@Override
+		public void run() {
+			for (int i = 0; i < 10000; i++) {
+				counter.increment();
+			}
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		Thread[] threads = new Thread[5];
+		Counter counter = new Counter();
+		for (int i =0 ; i < threads.length; i++) {
+			threads[i] = new Thread(new Runnable(counter));
+			threads[i].start();
+		}
+		for (int i = 0; i < threads.length; i++)
+			threads[i].join();
+		System.out.pripntln("counter = " + Counter.count);
+	}
+
+
 
 
 ## 참고
