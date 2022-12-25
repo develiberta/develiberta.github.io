@@ -1,0 +1,132 @@
+---
+title: OS Synchronization Examples
+author: Develiberta
+date: 2022-12-25 18:00:00 +0900
+categories: [CS, OS]
+tags: [CS, OS]
+---
+
+
+## 목적
+---
+1. 동기화 예제들을 이해한다.
+
+## 실천 목표
+---
+1. 유한 버퍼, readers-writer 및 식사하는 철학자 동기화 문제에 관해 설명한다.
+
+## 동시성 제어 문제의 분류
+---
+1. 유한 버퍼 문제 The Bounded Buffer Problem
+2. Readers-Writers 문제 The Readers-Writers Problem
+3. 식사하는 철학자들 문제 The Dining Philosophers Problem
+
+## 유한 버퍼 문제 (The Bounded Buffer Problem)
+---
+1. 생산자-소비자 문제 중 다음의 특정 조건을 만족
+	- n개의 버퍼로 구성된 풀(pool)이 있으며 각 버퍼는 한 항목(item)을 저장할 수 있다고 가정
+2. 다음과 같은 자료구조를 가짐
+	```c
+		int n;
+		semaphore mutex = 1;
+		semaphore empty = n;
+		semaphore full	= 0;
+	```
+	- mutex 이진 세마포는 버퍼 풀에 접근하기 위한 상호 배제 기능을 제공 (1로 초기화)
+	- empty는 비퍼 있는 버퍼의 수를, full은 꽉 찬 버퍼의 수를 기록 (empty는 n 값으로 초기화, full은 0으로 초기화)
+3. 생산자 프로세스
+```c
+	while (true) {
+		/* ... */
+		/* produce an item in next_produced */
+		/* ... */
+		wait(empty);	// consumer가 buffer를 다 비울 때까지 기다림
+		wait(mutex);	// 여기까지 수행했다면 buffer가 비어있고 이 프로세스 혼자만 들어온 게 보장됨
+		/* ... */
+		/* add next_produced to the buffer */
+		/* ... */
+		signal(mutex);	// 끝난 후에 반납
+		signal(full);	// buffer가 다 찼음을 consumer에 알림
+	}
+```
+4. 소비자 프로세스
+```c
+	while (true) {
+		wait(full);		// signal(full)을 받아야만 깨어남
+		wait(mutex);	// 여기까지 수행했다면 buffer가 가득 차 있고 이 프로세스 혼자만 들어온 게 보장됨
+		/* ... */
+		/* remove an item from buffer to next_consumed */
+		/* ... */
+		signal(mutex);	// 끝난 후에 반납
+		signal(empty);	// buffer가 비어있음을 producer에 알림
+	}
+```
+
+## Readers-Writers 문제 (The Readers-Writers Problem)
+---
+1. 생산자-소비자 문제 중 다음의 특정 조건을 만족
+	- 프로세스 분류
+		- 공유 데이터의 내용을 읽기만 하는 프로세스 reader
+		- 공유 데이터의 내용을 (읽고) 쓰는 프로세스 writer
+	- 두 reader가 동시에 공유 데이터에 접근하면 문제가 발생하지 않음
+	- 한 writer가 공유 데이터에 접근할 때 다른 reader나 writer가 공유 데이터에 접근하면 혼란 야기
+	- 이 문제가 발생하지 않도록 보장하기 위해 writer가 쓰기 작업을 하는 동안 공유 데이터에 대해 배타적 접근 권한을 가지게 할 필요성
+2. Readers-Writers 문제의 변형
+	1. 첫 번째 Readers-Writers 문제
+		- 단순히 Writer가 기다리고 있다는 이유만으로 다른 Reader들이 끝날 때까지 기다리는 Reader가 있어서는 안됨
+		- Reader과 Writer에게 공평한 기회 제공 
+	2. 두 번째 Readers-Writers 문제
+		- Writer가 객체에 접근하려고 기다리고 있다면 새로운 Reader들은 읽기를 시작하지 못함
+		- Reader보다 Wrtier에게 우선한 기회 제공
+
+## 첫 번째 Readers-Writers 문제
+---
+1. Readers-Writers 문제의 변형
+	- 단순히 Writer가 기다리고 있다는 이유만으로 다른 Reader들이 끝날 때까지 기다리는 Reader가 있어서는 안됨
+	- Reader과 Writer에게 공평한 기회 제공
+	- 아래 예시에서는 1개의 Writer와 n개의 Reader가 있다고 가정
+2. 다음과 같은 자료구조를 가짐
+	```c
+		semaphore rw_mutex = 1;
+		semaphore mutex = 1;
+		int read_count = 0;
+	```
+	- rw_mutex 세마포는 Reader와 Writer가 모두 공유 (1로 초기화), 주로 Writer를 위함
+	- mutex 세마포는 read_count를 갱신할 때 상호 배제를 보장하기 위해 사용 (1로 초기화)
+	- read_count는 현재 객체를 읽고 있는 Reader 프로세스들의 갯수
+3. Writer 프로세스
+```c
+	while (true) {
+		wait(rw_mutex);
+		/* ... */
+		/* writing is performed */
+		/* ... */
+		signal(rw_mutex);
+	}
+```
+4. Reader 프로세스
+```c
+	while (true) {
+		wait(mutex);
+		read_count++;
+		if (read_count == 1)
+			wait(rw_mutex);
+		signal(mutex);
+		/* ... */
+		/* reading is performed */
+		/* ... */
+		wait(mutex);
+		read_count--;
+		if (read_count == 0)
+			signal(rw_mutex);
+		signal(mutex);
+	}
+```
+
+## 참고
+---
+1. 운영체제 공룡책 강의 | 주니온 | 인프런
+	https://www.inflearn.com/course/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%84%EA%B3%B5%EA%B0%95%EC%9D%98/dashboard
+2. 운영체제 제 10판 | Abraham Silberschatz, Peter Baer Galvin, Greg Gagne 저/박민규 역 | 퍼스트북 | 2020년 02월 28일
+3. 운영체제 제 10판 솔루션
+	https://codex.cs.yale.edu/avi/os-book/OS10/practice-exercises/index-solu.html
