@@ -61,6 +61,31 @@ tags: [CS, OS]
 		signal(empty);	// buffer가 비어있음을 producer에 알림
 	}
 ```
+5. 예제 소스
+	1. PThread Solution
+		```c
+			#include <stdio.h>
+			#include <stdlib.h>
+			#include <unistd.h>
+			#include <pthread.h>
+			#include <semaphore.h>
+
+			#define true 1
+			#define BUFFER_SIZE 5
+
+			int buffer[BUFFER_SIZE];
+
+			pthread_mutex_t mutex;
+			sem_t empty, full;
+
+			int in = 0, out = 0;
+
+			int main(int argc, char *argv[]) {
+				int i, numOfProducers = 1, num
+			}
+		```
+	2. Java Solution
+
 
 ## Readers-Writers 문제 (The Readers-Writers Problem)
 ---
@@ -121,7 +146,7 @@ tags: [CS, OS]
 			signal(rw_mutex);
 		signal(mutex);
 	}
-```
+``` 
 
 ## 참고
 ---
