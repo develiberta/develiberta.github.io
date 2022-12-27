@@ -35,32 +35,32 @@ tags: [CS, OS]
 	- mutex 이진 세마포는 버퍼 풀에 접근하기 위한 상호 배제 기능을 제공 (1로 초기화)
 	- empty는 비퍼 있는 버퍼의 수를, full은 꽉 찬 버퍼의 수를 기록 (empty는 n 값으로 초기화, full은 0으로 초기화)
 3. 생산자 프로세스
-```c
-	while (true) {
-		/* ... */
-		/* produce an item in next_produced */
-		/* ... */
-		wait(empty);	// consumer가 buffer를 다 비울 때까지 기다림
-		wait(mutex);	// 여기까지 수행했다면 buffer가 비어있고 이 프로세스 혼자만 들어온 게 보장됨
-		/* ... */
-		/* add next_produced to the buffer */
-		/* ... */
-		signal(mutex);	// 끝난 후에 반납
-		signal(full);	// buffer가 다 찼음을 consumer에 알림
-	}
-```
+	```c
+		while (true) {
+			/* ... */
+			/* produce an item in next_produced */
+			/* ... */
+			wait(empty);	// consumer가 buffer를 다 비울 때까지 기다림
+			wait(mutex);	// 여기까지 수행했다면 buffer가 비어있고 이 프로세스 혼자만 들어온 게 보장됨
+			/* ... */
+			/* add next_produced to the buffer */
+			/* ... */
+			signal(mutex);	// 끝난 후에 반납
+			signal(full);	// buffer가 다 찼음을 consumer에 알림
+		}
+	```
 4. 소비자 프로세스
-```c
-	while (true) {
-		wait(full);		// signal(full)을 받아야만 깨어남
-		wait(mutex);	// 여기까지 수행했다면 buffer가 가득 차 있고 이 프로세스 혼자만 들어온 게 보장됨
-		/* ... */
-		/* remove an item from buffer to next_consumed */
-		/* ... */
-		signal(mutex);	// 끝난 후에 반납
-		signal(empty);	// buffer가 비어있음을 producer에 알림
-	}
-```
+	```c
+		while (true) {
+			wait(full);		// signal(full)을 받아야만 깨어남
+			wait(mutex);	// 여기까지 수행했다면 buffer가 가득 차 있고 이 프로세스 혼자만 들어온 게 보장됨
+			/* ... */
+			/* remove an item from buffer to next_consumed */
+			/* ... */
+			signal(mutex);	// 끝난 후에 반납
+			signal(empty);	// buffer가 비어있음을 producer에 알림
+		}
+	```
 5. 예제 소스
 	1. PThread Solution
 		```c
@@ -81,10 +81,171 @@ tags: [CS, OS]
 			int in = 0, out = 0;
 
 			int main(int argc, char *argv[]) {
-				int i, numOfProducers = 1, num
+				int i, numOfProducers = 1, numOfConsumers = 1;
+				pthread_t tid;
+
+				pthread_mutex_init(&mutex, NULL);
+				sem_init(&empty, 0, BUFFER_SIZE);
+				sem_init(&full, 0, 0);
+				srand(time(0));
+
+				// Create the Producers
+				for (int i = 0; i < numOfProducers; i++)
+					pthread_create(&tid, NULL, producer, NULL);
+				
+				// Create the Consumers
+				for (int i = 0; i < numOfConsumers; i++)
+					pthread_create(&tid, NULL, consumer, NULL);
+
+				sleep(10);
+				return 0;
+			}
+
+			void *producer(void *param) {
+				int item;
+				while (true) {
+					usleep((1 + rand() % 5) * 100000);
+					item = 1000 + rand() % 1000;
+					insert_item(item);	// critical section in fuction
+				}
+			}
+
+			void *consumer(void *param) {
+				int item;
+				while (true) {
+					usleep((1 + rand() % 5) * 100000);
+					remove_item(&item);	// critical section in function
+				}
+			}
+
+			void insert_item(int item) {
+				sem_wait(&empty);
+				pthread_mutex_lock(&mutex);
+
+				buffer[in] = item;
+				in = (in + 1) % BUFFER_SIZE;
+				printf("Producer: inserted $%d\n", item);
+
+				pthread_mutex_unlock(&mutex);
+				sem_post(&full);
+			}
+
+			void remove_item(int *item) {
+				sem_wait(&full);
+				pthread_mutex_lock(&mutex);
+
+				*item = buffer[out];
+				out = (out + 1) % BUFFER_SIZE;
+				printf("Consumer: removed $%d\n", *item);
+
+				pthread_mutex_unlock(&mutex);
+				sem_post(&empty);
 			}
 		```
 	2. Java Solution
+		```c
+			public class BoundedBuffer {
+				public static void main(String[] args) {
+					CashBox cashBox = new CashBox(1);
+					Thread[] producers = new Thread[1];
+					Thread[] consumers = new Thread[1];
+
+					// Create Threads of Producers
+					for (int i = 0; i < producers.length; i++) {
+						producers[i] = new Thread(new ProdRunner(cashBox));
+						producers[i].start();
+					}
+
+					// Create Threads of Consumers
+					for (int i = 0; i < consumers.length; i++) {
+						consumers[i] = new Thread(new ProdRunner(cashBox));
+						consumers[i].start();
+					}
+				}
+			}
+
+			class ProdRunner implements Runnable {
+				CashBox cashBox;
+				
+				public ProdRunner(CashBox cashBox) {
+					this.cashBox = cashBox;
+				}
+
+				@Override
+				public void run() {
+					try {
+						while (true) {
+							Thread.sleep((long) (Math.random() * 500));
+							int money = ((int) (1 + Math.ramdom() * 9)) * 10000;
+							cashBox.give(money);
+						}
+					} catch (InterruptedException e) {}
+				}
+			}
+
+			class ConsRunner implements Runnable {
+				CashBox cashBox;
+
+				public ConsRunner(CashBox cashBox) {
+					this.cashBox = cashBox;
+				}
+
+				@Override
+				public void run() {
+					try {
+						while (true) {
+							Thread.sleep((long) (Math.random() * 500));
+							int money = cashBox.take();
+						}
+					} catch (InterruptedException e) {}
+				}
+			}
+
+			class CashBox {
+
+				private int[] buffer;
+
+				private int count, in, out;
+
+				public CashBox(int bufferSize) {
+					buffer = new int[bufferSize];
+					count = in = out = 0;
+				}
+
+				synchronized public void give(int money) throws InterruptedException {
+					while (count == buffer.length) {
+						try {
+							wait();
+						} catch (InterruptedException e) {}
+					}
+
+					// critical section
+					buffer[in] = money;
+					in = (in + 1) % buffer.length;
+					count++;
+					System.out.printf("여기있어: %d원\n", money);
+
+					notify();
+				}
+
+				synchronized public int take() throws InterruptedException {
+					while (count == 0) {
+						try {
+							wait();
+						} catch (InterruptedException e) {}
+					}
+
+					// critical section
+					int money = buffer[out];
+					out = (out + 1) % buffer.length;
+					count--;
+					System.out.printf("고마워요: %d원\n", money);
+
+					notify();
+					return money;
+				}
+			}
+		```
 
 
 ## Readers-Writers 문제 (The Readers-Writers Problem)
@@ -120,33 +281,82 @@ tags: [CS, OS]
 	- mutex 세마포는 read_count를 갱신할 때 상호 배제를 보장하기 위해 사용 (1로 초기화)
 	- read_count는 현재 객체를 읽고 있는 Reader 프로세스들의 갯수
 3. Writer 프로세스
-```c
-	while (true) {
-		wait(rw_mutex);
-		/* ... */
-		/* writing is performed */
-		/* ... */
-		signal(rw_mutex);
-	}
-```
-4. Reader 프로세스
-```c
-	while (true) {
-		wait(mutex);
-		read_count++;
-		if (read_count == 1)
+	```c
+		while (true) {
 			wait(rw_mutex);
-		signal(mutex);
-		/* ... */
-		/* reading is performed */
-		/* ... */
-		wait(mutex);
-		read_count--;
-		if (read_count == 0)
+			/* ... */
+			/* writing is performed */
+			/* ... */
 			signal(rw_mutex);
-		signal(mutex);
-	}
-``` 
+		}
+	```
+4. Reader 프로세스
+	```c
+		while (true) {
+			wait(mutex);
+			read_count++;
+			if (read_count == 1)
+				wait(rw_mutex);
+			signal(mutex);
+			/* ... */
+			/* reading is performed */
+			/* ... */
+			wait(mutex);
+			read_count--;
+			if (read_count == 0)
+				signal(rw_mutex);
+			signal(mutex);
+		}
+	```
+5. 예제 소스
+	1. Java Solution
+		```c
+			class SharedDB {
+				private int readerCount = 0; // 읽고 있는 Reader 프로세스 갯수
+				private boolen isWriting = false;
+
+				public void read() {
+					sharedDB.acquireReadLock();
+					sharedDB.read();
+					sharedDB.releaseReadLock();
+				}
+
+				public void write() {
+					sharedDB.acquireWriteLock();
+					sharedDB.write();
+					sharedDB.releaseWriteLock();
+				}
+			}
+
+			synchronized public void acquireReadLock() {
+				while (isWriting == true) {
+					try {
+						wait();
+					} catch (InterruptedException e) {}
+				}
+				readerCount++;
+			}
+
+			synchronized public void releaseReadLock() {
+				readerCount--;
+				if (readerCount == 0)
+					notify();
+			}
+
+			synchronized public void acquireWriteLock() {
+				while (readerCount > 0 || isWriting == true) {
+					try {
+						wait();
+					} catch (InterrputedException e) {}
+				}
+				isWriting = true;
+			}
+
+			synchronized public void releaseWriteLock() {
+				isWriting = true;
+				notifyAll();	// 공평하게 Ready Queue에서 경쟁하도록 하기 위함
+			}
+		```
 
 ## 참고
 ---
