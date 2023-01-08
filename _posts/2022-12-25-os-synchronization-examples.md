@@ -617,6 +617,11 @@ tags: [CS, OS]
 		}
 	```
 
+## 대체 방안들
+	1. 트랜잭션 메모리 Transactional Memory
+	2. OpenMP
+	3. Functional Programming Language
+
 ## 참고
 ---
 1. 운영체제 공룡책 강의 | 주니온 | 인프런
