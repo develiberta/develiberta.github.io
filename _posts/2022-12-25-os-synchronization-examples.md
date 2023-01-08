@@ -247,7 +247,6 @@ tags: [CS, OS]
 			}
 		```
 
-
 ## Readers-Writers 문제 (The Readers-Writers Problem)
 ---
 1. 생산자-소비자 문제 중 다음의 특정 조건을 만족
@@ -310,7 +309,7 @@ tags: [CS, OS]
 	```
 5. 예제 소스
 	1. Java Solution
-		```c
+		```java
 			class SharedDB {
 				private int readerCount = 0; // 읽고 있는 Reader 프로세스 갯수
 				private boolen isWriting = false;
@@ -357,6 +356,266 @@ tags: [CS, OS]
 				notifyAll();	// 공평하게 Ready Queue에서 경쟁하도록 하기 위함
 			}
 		```
+
+## 식사하는 철학자들 문제 (The Dining Philosophers Problem)
+---
+1. 고전적인 동기화 문제
+	- 많은 부류의 벙행제어 문제의 한 예
+	- 교착 상태와 기아를 발생시키지 않고 여러 스레드에게 여러 자원을 할당해야 할 필요를 단순하게 표현한 문제
+2. 문제 내용
+	![2022-12-25-os-synchronization-examples-00](/assets/img/illustrations/2022-12-25-os-synchronization-examples-00.png)
+	- 생각하고 먹으면서 시간을 보내는 5명의 철학자
+	- 철학자들은 원형의 테이블을 공유
+	- 테이블 중앙에는 한 사발의 밥
+	- 테이블에는 다섯 개의 젓가락
+	- 밥을 먹기 위해서는 두 개의 젓가락 필요
+	- 철학자는 생각할 때 상호 작용 없음
+3. 해결안
+	1. 세마포 해결안 (Semaphore Solution)
+		- 각 젓가락을 하나의 세마포로 표현
+		```c
+			while (true) {
+				wait(chopstick[i]);
+				wait(chopstick[(i+1) % 5]);
+				/* ... */
+				/* eat for a while */
+				/* ... */
+				signal(chopstick[i]);
+				signal(chopstick[(i+1) % 5]);
+				/* ... */
+				/* think for a while */
+				/* ... */
+			}
+		```
+		- 교착 상태를 야기할 가능성이 있기 때문에 채택하지 않음 (예) 5명의 철학자 모두가 동시에 배가 고파서 자신의 왼쪽 젓가락을 잡는 경우
+		- 교착 상태 문제에 대한 여러 가지 해결책
+			- 최대 4명의 철학자만이 테이블에 동시에 앉을 수 있도록 함
+			- 한 철학자가 젓가락 두 개를 모두 집을 수 있을 때만 젓가락을 집도록 허용
+			- 비대칭 해결안 (홀수 번호의 철학자는 먼저 왼쪽 젓가락을 집고, 짝수 번호의 철학자는 먼저 오른쪽 젓가락을 집음)
+	2. 모니터 해결안 (Monitor Solution)
+		- 한 철학자가 젓가락 두 개를 모두 집을 수 있을 때만 젓가락을 집도록 허용한다는 제한을 강제
+		- 철학자가 처할 수 있는 세 가지 상태를 구분하기 위한 자료구조 도입
+		```c
+			enum {THINKING, HUNGRY, EATING} state[5];
+		```
+		- 철학자 i가 배가 고프더라도 젓가락 두 개를 집을 수 없을 때에는 젓가락 집는 것을 미룰 수 있도록 함
+		```c
+			condition self[5];
+		```
+	3. Pthread를 이용한 모니터 해결안 (Pthread solution to the Dining-Philosophers Problem)
+	```c
+		#include <stdio.h>
+		#include <stdlib.h>
+		#include <unistd.h>
+		#include <pthread.h>
+
+		#define true 1
+		#define NUM_PHILS 5
+
+		enum {THINKING, HUNGRY, EATING} state[NUM_PHILS];
+
+		pthread_mutex_t mutex_lock;
+		pthread_cond_t cond_vars[NUM_PHILS];
+
+		void init() {
+			int i;
+			for (i = 0; i < NUM_PHILS; i++) {
+				state[i] = THINKING;
+				pthread_cond_init(&cond_vars[i], NULL);
+			}
+			pthread_mutex_init(&mutex_lock, NULL);
+			srand(time(0));
+		}
+
+		int leftOf(int i) {
+			return (i + NUM_PHILS - 1) % NUM_PHILS;
+		}
+
+		int rightOf(int i) {
+			return (i + 1) % NUM_PHILS;
+		}
+
+		void think(int id) {
+			printf("%d: Now, I'm thinking...\n", id);
+			usleep((1 + rand() % 50) * 10000);
+		}
+
+		void eat(int id) {
+			printf("%d: Now, I'm eating...\n", id);
+			usleep((1 + rand() % 50) * 10000);
+		}
+
+		void test(int i) {
+			// If I'm hungry and my neighbors are not eating,
+			// then let me eat.
+			if (state[i] == HUNGRY &&
+				state[leftOf(i)] != EATING && state[rightOf(i)] != EATING) {
+					state[i] = EATING;
+					pthread_cond_signal(&cond_vars[i]);
+			}
+		}
+
+		void pickup(int i) {
+			pthread_mutex_lock(&mutex_lock);
+
+			state[i] = HUNGRY;
+			test(i);
+			while (state[i] != EATING) {
+				pthread_cond_wait(&cond_vars[i], &mutex_lock);
+			}
+
+			pthread_mutex_unlock(&mutex_lock);
+		}
+
+		void putdown(int i) {
+			pthread_mutex_lock(&mutex_lock);
+
+			state[i] = THINKING;
+			test(leftOf(i));
+			test(rightOf(i));
+
+			pthread_mutex_unlock(&mutex_lock);
+		}
+
+		void *philosopher(void *param) {
+			int id = *((int *)param);
+			while (true) {
+				think(id);
+				pickup(id);
+				eat(id);
+				putdown(id);
+			}
+		}
+
+		int main() {
+			int i;
+			pthread_t tid;
+			init();
+			for (i = 0; i < NUM_PHILS; i++)
+				pthread_create(&tid, NULL, philosopher, (void *)&i);
+			for (i = 0; i < NUM_PHILS; i++)
+				pthread_join(tid, NULL);
+			return 0;
+		}
+	```
+	4. Java를 이용한 모니터 해결안 (Java solution to the Dining-Philosophers Problem)
+	```java
+		package os.concepts;
+
+		import java.util.concurrent.locks.Condition;
+		import java.util.concurrent.locks.Lock;
+		import java.util.concurrent.locks.ReentrantLock;
+
+		enum State {
+			THINKING, HUNGRY, EATING
+		}
+
+		public class DiningPhilosophers {
+
+			public static void main(String[] args) throws Exception {
+				int numOfPhils = 5;
+				Philosopher[] philosophers = new Philosopher[numOfPhils];
+				DiningPhilosopherMonitor monitor = new DiningPhilosopherMonitor(numOfPhils);
+				for (int i = 0; i < philosophers.length; i++)
+					new Thread(new Philosopher(i, monitor)).start();
+			}
+		}
+
+		class Philosopher implements Runnable {
+
+			private int id;
+			private DiningPhilosopherMonitor monitor;
+
+			public Philosopher(int id, DiningPhilosopherMonitor monitor) {
+				this.id = id;
+				this.monitor = monitor;
+			}
+
+			@Override
+			public void run() {
+				while (true) {
+					think();
+					monitor.pickup(id);
+					eat();
+					monitor.putdown(id);
+				}
+			}
+
+			private void think() {
+				try {
+					System.out.println(id + ": Now I'm thinking.");
+					Thread.sleep((long)(Math.random()*500));
+				} catch (InterruptedException e) { }
+			}
+
+			private void eat() {
+				try {
+					System.out.println(id + ": Now I'm eating.");
+					Thread.sleep((long)(Math.random()*50));
+				} catch (InterruptedException e) { }
+			}
+		}
+
+		class DiningPhilosopherMonitor {
+
+			private int numOfPhils;
+			private State[] state;
+			private Condition[] self;
+			private Lock lock;
+
+			public DiningPhilosopherMonitor(int num) {
+				numOfPhils = num;
+				state = new State[num];
+				self = new Condition[num];
+				lock = new ReentrantLock();
+				for (int i = 0; i < num ; i++) {
+					state[i] = State.THINKING;
+					self[i] = lock.newCondition();
+				}
+			}
+
+			private int leftOf(int i) {
+				return (i + numOfPhils - 1) % numOfPhils;
+			}
+
+			private int rightOf(int i) {
+				return (i + 1) % numOfPhils;
+			}
+
+			private void test(int i) {
+				if (state[i] == State.HUNGRY &&
+						state[leftOf(i)] != State.EATING &&
+						state[rightOf(i)] != State.EATING) {
+					state[i] = State.EATING;
+					self[i].signal();
+				}
+			}
+
+			public void pickup(int id) {
+				lock.lock();
+				try {
+					state[id] = State.HUNGRY;
+					test(id);
+					if (state[id] != State.EATING)
+						self[id].await();
+				} catch (InterruptedException e) {
+				} finally {
+					lock.unlock();
+				}
+			}
+
+			public void putdown(int id) {
+				lock.lock();
+				try {
+					state[id] = State.THINKING;
+					test(leftOf(id));   // left neighbor
+					test(rightOf(id));  // right neighbor
+				} finally {
+					lock.unlock();
+				}
+			}
+		}
+	```
 
 ## 참고
 ---
