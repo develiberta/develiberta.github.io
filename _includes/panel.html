@@ -20,7 +20,7 @@
         {% assign index = item | split: "::" | last | plus: 0 %}
         {% assign post = site.posts[index] %}
         {% assign url = post.url | relative_url %}
-        <li><a href="{{ url }}">{{ post.title }}</a></li>
+        <li><a href="{{ url }}?v={{ site.time | date:'%s' }}">{{ post.title }}</a></li>
       {% endfor %}
 
       </ul>
@@ -37,7 +37,7 @@
 
       {% for tag_name in trending_tags %}
         {% assign url = tag_name | slugify | url_encode | prepend: "/tags/" | append: "/" %}
-        <a class="post-tag" href="{{ url | relative_url }}">{{ tag_name }}</a>
+        <a class="post-tag" href="{{ url | relative_url }}?v={{ site.time | date:'%s' }}">{{ tag_name }}</a>
       {% endfor %}
 
       </div>

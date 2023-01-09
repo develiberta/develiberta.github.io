@@ -87,7 +87,7 @@
       {% assign index = entry | plus: 0 %}
       {% assign post = site.posts[index] %}
       <div class="card">
-        <a href="{{ post.url | relative_url }}">
+        <a href="{{ post.url | relative_url }}?v={{ site.time | date:'%s' }}">
           <div class="card-body">
             {% include timeago.html date=post.date class="small" %}
             <h3 class="pt-0 mt-1 mb-3" data-toc-skip>{{ post.title }}</h3>
