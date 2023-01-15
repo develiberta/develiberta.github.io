@@ -10,7 +10,7 @@
 
       {% for tag in trending_tags %}
         {% capture url %}/tags/{{ tag | slugify | url_encode }}/{% endcapture %}
-        <a class="post-tag" href="{{ url | relative_url }}">{{ tag | replace: '-', ' ' }}</a>
+        <a class="post-tag" href="{{ url | relative_url }}?v={{ site.time | date:'%s' }}">{{ tag | replace: '-', ' ' }}</a>
       {% endfor %}
 
     </div>

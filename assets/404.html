@@ -16,11 +16,11 @@ dynamic_title: true
 <div class="lead">
 
   {%- capture _head_back -%}
-    <a href="{{ '/' | relative_url }}">{{ site.data.locales[lang].not_found.head_back }}</a>
+    <a href="{{ '/' | relative_url }}?v={{ site.time | date:'%s' }}">{{ site.data.locales[lang].not_found.head_back }}</a>
   {%- endcapture -%}
 
   {%- capture _archives_page -%}
-    <a href="{{ 'archives' | relative_url }}">{{ site.data.locales[lang].not_found.archives_page }}</a>
+    <a href="{{ 'archives' | relative_url }}?v={{ site.time | date:'%s' }}">{{ site.data.locales[lang].not_found.archives_page }}</a>
   {%- endcapture -%}
 
   <p>{{site.data.locales[lang].not_found.statment }}</p>
