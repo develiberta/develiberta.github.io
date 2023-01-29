@@ -101,9 +101,9 @@ void *do_work_two(void *param)
 2. 방지 또는 회피
 3. 허용 후 추적과 회복
 
-## 교착 상태 방지
+## 교착 상태 방지 Deadlock Prevention
 ---
-교착 상태가 발생하기 위한 4가지 필수 조건 중 적어도 1개를 제거
+교착 상태가 발생하기 위한 4가지 필수 조건 중 적어도 1개를 제거 (요청 방법에 제한을 두는 방식)
 1. Mutual Exclusion (상호 배제)
 	- 어떤 자원들은 본질적으로 공유할 수 없으므로 이 조건을 제거하는 것은 본질적으로 불가능
 2. Hold and Wait (점유 대기)
@@ -135,6 +135,27 @@ void *do_work_two(void *param)
 		transaction(checking_account, savings_account, 25.0);
 		transaction(savings_account, checking_account, 50.0);
 		```
+
+## 교착 상태 회피 Deadlock Avoidance
+---
+미래에 일어날 가능성이 있는 교착 상태를 회피하기 위해 프로세스의의 자원 요청을 수락할지 결정 (요청한 프로세스에 대해 기다리거나 수락되거나가 결정됨)
+- 이를 위해서는 다음과 같은 priori information(선행 정보) 필요
+	- 프로세스가 총 실행되는 시간에 (최대로) 필요로 하는 각 자원의 개수 A
+	- 프로세스에 현재 할당된 각 자원의 개수 B
+	- 프로세스가 남은 시간동안에 필요로 하는 각 자원의 개수 C=A-B
+	- 현재 사용 가능한 각 자원의 개수
+- 프로세스가 자원 요청 시 Claim Edge를 Request Edge로 바꾼다고 가정할 때, 안전 상태(Safe State)인지 여부를 판단해서 프로세스에 요청을 수락(Grant) 할지 결정
+	- 안전 상태(Safe State)란 프로세스가 교착 상태 없이 실행될 수 있는 Safe Sequence가 존재한다는 의미
+	- 안전 상태(Safe State)의 여집합인 Unsafe State는 Deadlock 상태를 부분집합으로 포함
+- 인스턴스의 개수에 따라 다음과 같이 회피 가능
+	- Single Instance
+		- Claim Edge를 Request Edge로 바꾸는 경우 (Claim Edge를 포함해서) Cycle이 생기는 경우 회피
+	- Multiple Instances
+		- Banker's Algorithm
+
+## 교착 상태 탐지 Deadlock Detection
+---
+
 
 ## 참고
 ---
