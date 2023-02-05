@@ -37,6 +37,10 @@ tags: [CS, OS]
 2. 컴파일러는 이 심볼 주소를 재배치 가능 주소(예: 이 모듈의 첫 번째 바이트로부터 열네 번째 바이트 주소")로 바인딩
 3. 링커(linker)나 로더(loader)가 재배치 가능 주소를 절대 주소(예: 74014번지)로 바인딩
 ![2023-02-05-os-main-memory-01](/assets/img/illustrations/2023-02-05-os-main-memory-01.jpg)
+	- source program에서는 symbolic address 사용
+	- object module에서는 relocatable address 사용
+	- executable file에서는 logical address 사용
+	- program in memory(process)에서는 physical address 사용
 
 ## 명령어와 데이터의 바인딩 시점
 ---
@@ -113,10 +117,12 @@ tags: [CS, OS]
 	1. 외부 단편화(external fragmentation)
 	![2023-02-05-os-main-memory-06](/assets/img/illustrations/2023-02-05-os-main-memory-06.jpg)
 		- 프로세스들이 메모리에 적재되고 제거되는 일이 반복될 때 작은 hole이 많이 생기는 현상
+		- continuous memory allocation으로 인해 발생
 		- 이를 해결하는 방법으로 압축(compaction), 페이징(paging)를 들 수 있음
 	2. 내부 단편화(internal fragmentation)
 		- 일반적으로 메모리를 먼저 아주 작은 공간들로 분할하고 프로세스가 요청하면 할당을 항상 이 분할된 크기의 정수배로만 함
 		- 할당된 공간은 요구된 공간보다 약간 더 클 수 있는데 이들 두 크기 사이의 남는 부분이 생기는 현상
+		- paging으로 인해 발생
 
 ## 참고
 ---
