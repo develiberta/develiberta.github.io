@@ -151,7 +151,7 @@ void *do_work_two(void *param)
 	- Single Instance
 		- Claim Edge를 Request Edge로 바꾸는 경우 (Claim Edge를 포함해서) Cycle이 생기는 경우 회피
 	- Multiple Instances
-		- Banker's Algorithm
+		- Banker's Algorithm : Unsafe인 경우 회피
 
 ## 교착 상태 탐지 Deadlock Detection
 ---
@@ -166,7 +166,7 @@ void *do_work_two(void *param)
 	- Single Instance
 		- Cycle이 생기는 경우 탐지
 	- Multiple Instances
-		- Banker's Algorithm
+		- Banker's Algorithm : Unsafe인 경우 탐지
 
 ## 참고
 ---
