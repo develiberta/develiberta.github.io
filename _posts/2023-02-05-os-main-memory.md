@@ -124,6 +124,82 @@ tags: [CS, OS]
 		- 할당된 공간은 요구된 공간보다 약간 더 클 수 있는데 이들 두 크기 사이의 남는 부분이 생기는 현상
 		- paging으로 인해 발생
 
+## 페이징 Paging
+---
+1. 배경
+	- 연속적인 메모리 할당이 외부 단편화를 발생시킴
+	- 메모리를 주기적으로 압축해야하 하는 번거로움
+	- 사실 연속적인 메모리 사용은 제한적이므로 메모리를 비연속적으로 사용하는 방법이 필요
+2. 기본적인 아이디어
+	- 용어
+		- frame 프레임 : 물리적인 메모리를 고정된 사이즈로 분할한 블록 
+		- page 페이지 : 논리적인 메모리를 고정된 사이즈로 분할한 블록
+		- 위의 두 메모리는 완전히 독립적이며 OS가 이를 매핑
+	- 아이디어
+		- 논리적인 메모리 (CPU에 의해 생성된 메모리)는 두 부분으로 나뉨
+			- page number
+			- page offset
+		- page number는 process마다 가지고 있는 page table에서 사용됨
+		- page offset은 그대로 사용됨
+		![2023-02-05-os-main-memory-07](/assets/img/illustrations/2023-02-05-os-main-memory-07.png)
+		![2023-02-05-os-main-memory-08](/assets/img/illustrations/2023-02-05-os-main-memory-08.jpg)
+	- 페이지
+		- 페이지의 사이즈는 하드웨어 의존적
+		- 페이지의 사이즈는 4KB ~ 1GB 사이에 존재하며, 2의 제곱으로 표현되는 수
+		- 논리적인 메모리 공간이 $$2^m$$, 페이지의 사이즈가 $$2^n$$인 경우,
+			- page offset을 위한 부분에는 $$n$$ bits가 할당되고 (그게 offset이 가질 수 있는 최대값이믜로)
+			- page number을 위한 부분에는 $$m-n$$ bits가 할당됨
+			![2023-02-05-os-main-memory-09](/assets/img/illustrations/2023-02-05-os-main-memory-09.jpg)
+			![2023-02-05-os-main-memory-10](/assets/img/illustrations/2023-02-05-os-main-memory-10.jpg)
+			![2023-02-05-os-main-memory-11](/assets/img/illustrations/2023-02-05-os-main-memory-11.jpg)
+3. 페이징에 대한 하드웨어 지원
+	- PTBR (page-table base register)
+		- 프로세스마다 page table이 다르므로 문맥 교환 (context switch)가 발생할 때 page table도 다른 page table로 갱신될 필요가 있음
+		- PTBR은 page table(각 프로세스의 PCB 내에 존재)에 대한 포인터를 저장
+		- CPU 내에 존재하는 레지스터
+	- TLB (Translation Look-aside Buffer)
+		- page table이 main memory에 존재하는 점을 감안하면 main memory에 두 번의 access가 필요
+		- (1) page table에 access해서 실제 데이터의 주소를 알아낸 후 (2) 실제 데이터에 access
+		- TLB는 이를 해결하기 위한 특별하고 규모가 작고 빠르게 훑는 것이 가능한 하드웨어적인 캐시 메모리
+		![2023-02-05-os-main-memory-12](/assets/img/illustrations/2023-02-05-os-main-memory-12.png)
+4. 페이징 사용 시 메모리의 보호
+	- Protection bit을 사용하는 방법
+		- page table의 각 entry에 valid/invalid라는 하나의 비트가 더 있음
+		- 이 비트가 invalid로 설정되면 그 페이지는 프로세스의 논리 주소 공간에 속하지 않는다는 것을 나타냄
+		![2023-02-05-os-main-memory-13](/assets/img/illustrations/2023-02-05-os-main-memory-13.png)
+	- PTLR(Page Table Length Register, 페이지 테이블 길이 레지스터)을 사용하는 방법
+		- 프로세스가 제시한 주소가 유효한 범위 내에 있는지를 확인하기 위해 모든 논리 주소 값이 PTLR 값과 비교됨
+5. 공유 페이지
+	- 페이징을 사용하면 공유도 수월
+	![2023-02-05-os-main-memory-14](/assets/img/illustrations/2023-02-05-os-main-memory-14.jpg)
+6. 페이지 테이블 page table의 발전
+	- page table이 매우 커져서 이를 구축하는 기술이 필요
+	- 종류
+		- 계층적 페이징 _Hierarchical Paging
+			- 2단계 페이징 기법(two-level paging scheme)으로 페이지 테이블 자체가 다시 페이징되게 하는 기법
+			![2023-02-05-os-main-memory-15](/assets/img/illustrations/2023-02-05-os-main-memory-15.jpg)
+			![2023-02-05-os-main-memory-16](/assets/img/illustrations/2023-02-05-os-main-memory-16.png)
+		- 해시 페이지 테이블 _Hashed Page Table
+			- 해시 페이지 테이블의 각 항목이 연결 리스트를 가지고 있어서 해시 페이지 테이블에서 연결 리스트를 따라가며 첫 번째 원소와 가상 페이지 번호를 비교
+			- 일치되면 그에 대응하는 페이지 프레임 번호를 가져와 물리 주소를 얻음
+			- 일치되지 않으면 그다음 원소로 똑같은 행위 반복
+			![2023-02-05-os-main-memory-17](/assets/img/illustrations/2023-02-05-os-main-memory-17.png)
+		- 역 페이지 테이블 _Inverted Page Table
+			- 시스템에 단 하나의 page table (위에서는 process마다 하나의 page table)
+			- page table의 각 entry에 PID 정보 존재
+			![2023-02-05-os-main-memory-18](/assets/img/illustrations/2023-02-05-os-main-memory-18.png)
+7. 스와핑 _Swapping
+	- 프로세스가 실행되기 위해서는 프로세스의 명령어와 명령어가 접근하는 데이터가 메모리에 있어야 함
+	- 그러나 프로세스 또는 프로세스의 일부분은 실행 중에 임시로 백업 저장장치(backing store)로 내보내어질 수 있고 다시 메모리에 돌아올 수 있음
+	- 종류
+		- 기본 스와핑 _Standard Swapping
+			- 메인 메모리와 백업 저장장치 간에 전체 프로세스를 이동
+			- 스와핑(Swapping)이란 용어는 일반적으로 표준 스와핑을 의미
+			- 표준 스와핑은 기존 UNIX 시스템에서 사용되었지만 메모리와 백업 저장장치 간에 프로세스 전체를 이동하는 데 걸리는 시간이 크기 때문에 최신 운영체제에서는 더는 사용되지 않음
+			![2023-02-05-os-main-memory-19](/assets/img/illustrations/2023-02-05-os-main-memory-19.jpg)
+		- 페이징에서의 스와핑 _Swapping with Paging
+			- Linux 및 Windows를 포함한 대부분의 시스템은 이제 프로세스 전체가 아닌 프로세스 페이지를 스왑할 수 있는 변형 스와핑을 사용
+
 ## 참고
 ---
 1. 운영체제 공룡책 강의 | 주니온 | 인프런
