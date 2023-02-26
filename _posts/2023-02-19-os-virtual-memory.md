@@ -118,7 +118,9 @@ tags: [CS, OS]
 			- counter
 				- 페이지가 참조될 때마다 counter나 clock을 복사해서 가장 작은 값을 가진 페이지를 교체
 			- stack
-				- 스택에 페이지 번호를 저장하고 가장 오래 전에 사용된 페이지를 스택의 중간에서 제거
+				- 스택에 페이지 번호를 저장하고 페이지가 참조될 때마다 페이지 번호가 (중간에 있는 경우) 스택의 중간에서 제거되어 스택 꼭대기(top)에 놓이게 됨
+				- 스택의 꼭대기(top)는 항상 가장 최근에 사용된 페이지고, 밑바닥(bottom)은 가장 오랫동안 이용되지 않은 페이지
+				- 이때 Douly Linked List로 구현되는데, 리스트의 tail 포인터가 스택의 밑바닥(bottom)을 가리키고 있게 됨
 				![2023-02-19-os-virtual-memory-15](/assets/img/illustrations/2023-02-19-os-virtual-memory-15.jpg)
 		- 그러나 하드웨어 도움 없이도 많은 시스템이 reference bit를 지원
 			- reference bit이란
