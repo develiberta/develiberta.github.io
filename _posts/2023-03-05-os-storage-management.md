@@ -1,190 +1,159 @@
 ---
-title: Storage Management
+title: Virtual Memroy
 author: Develiberta
-date: 2023-03-05 18:00:00 +0900
+date: 2023-02-19 18:00:00 +0900
 categories: [CS, OS]
 tags: [CS, OS]
 ---
 
-## Mass-Storeage Structure
+
+## 목적
 ---
-- **Mass-Storage는 컴퓨터의 보조 기억 장치**로, 비휘발성의 특징을 가지고 있다.
-- 보통, HDD(Hard Disk Drive)나 NVM(Non-Volatile Memory)를 의미한다.
-- 가끔씩 마그네틱 테이프, 광학 디스크, 클라우드 저장소를 의미하기도 한다.
+1. 물리적 스토리지의 구조를 이해한다.
+2. 논리적 스토리지에서 파일을 저장하는 방법을 설명한다.
 
-## Hard Disk Drive
+## 실천 목표
 ---
-![https://media.vlpt.us/images/hoyaho/post/25bfb154-3d5c-447d-a43a-21a3dee3e0ba/image.png](https://media.vlpt.us/images/hoyaho/post/25bfb154-3d5c-447d-a43a-21a3dee3e0ba/image.png)
+1. 물리적 스토리지의 구조를 이해한다.
+2. 논리적 스토리지에서 파일을 저장하는 방법을 설명한다.
 
-- 대용량 데이터를 저장하는 용도로 사용한다.
-- **하드디스크의 구조**
-    - Spindle : 디스크를 회전시켜 내용을 읽고 쓰는 역할로, 흔히 들은 RPM이 스핀들 모터의 회전 속도를 의미
-    - Platter : 실제 데이터가 저장되는 위치, 여러 트랙으로 구성
-    - Track : 데이터가 저장되는 공간
-    - Sector : 데이터 저장의 최소 단위, 하나의 파일만 저장 가능
-    - Cylinder : 플래터 표면 동일 트랙들의 집합
-    - Arm : 헤드를 움직이는 역할
-    - Read-Write Head : 데이터를 저장 혹은 삭제하며, 데이터를 읽어들이는 역할도 수행
-    - Block : 여러 섹터를 하나로 묶은 것
-
-### HDD Scheduling
+## 물리적 스토리지
 ---
-- 스케줄링의 목적은 **탐색 시간(Seek Time)을 줄이고 데이터 대역폭(bandwith)을 늘리는 것을 목표**로 한다.
-- **Seek Time** : 헤드가 저장된 **트랙**으로 이동하는데 걸리는 시간
-- **Rotation Latency** : 헤드가 트랙 내에서 원하는 **섹터**로 이동하는 것까지 걸리는 시간
-- **Disk Bandwidth** : 첫 요청에서 마지막 전송 완료시까지 `전송 용량 / 전체 시간` 을 계산, **즉 시간당 한 번에 전송할 수 있는 용량**`대역폭 : 정보 전송 능력, 한 점과 한 점 사이에서 얼마나 많이 전송 가능한지?`
+- 비휘발성으로 컴퓨터의 보조적인 저장장치
+- HDD, SDD, Flash Memory, NAND Memory
+- magnetic tapes, optical disks, cloud storage
+- HDD moving-head disk mechanism
+![2023-03-05-os-storage-management-01](/assets/img/illustrations/2023-03-05-os-storage-management-01.jpg)
 
-### FIFO Scheduling
+## HDD Scheduling
 ---
-![https://media.vlpt.us/images/hoyaho/post/86c7d5c8-0f98-4ab1-94f7-8d20aa7e4a28/image.png](https://media.vlpt.us/images/hoyaho/post/86c7d5c8-0f98-4ab1-94f7-8d20aa7e4a28/image.png)
+- 스케줄링은 seek time을 최소화하고 bandwidth를 최대화하는 방향으로 진행
+	- seek time
+		-
+	- disk bandwidth
+		-
 
-- **먼저 들어온 요청 섹터를 먼저 처리**하는 방법이다.
-- 본질적으로 공평하나 매우 느리다.
-
-### Scan Scheduling
+## 요구 페이징
 ---
-![https://media.vlpt.us/images/hoyaho/post/b9d8c236-a95e-4fb8-915e-414385bc206f/image.png](https://media.vlpt.us/images/hoyaho/post/b9d8c236-a95e-4fb8-915e-414385bc206f/image.png)
+1. 프로세스 실행 중 필요할 때만 페이지가 적재되어서 접근되지 않은 페이지는 물리 메모리로 적재되지 않음
+2. 프로세스가 실행되는 동안 일부 페이지는 메모리에 있고 일부 페이지는 보조저장장치에 있음
+	- swap in과 swap out  
+	![2023-02-19-os-virtual-memory-04](/assets/img/illustrations/2023-02-19-os-virtual-memory-04.jpg)
+3. 위의 둘을 구분하기 위해서는 하드웨어 지원이 필요
+	- (예) valid-invalid bit 기법
+		- 일부 페이지가 메인 메모리에 없을 때의 페이지 테이블  
+		![2023-02-19-os-virtual-memory-05](/assets/img/illustrations/2023-02-19-os-virtual-memory-05.jpg)
+4. 페이지 폴트(page fault)를 처리하는 과정
+![2023-02-19-os-virtual-memory-06](/assets/img/illustrations/2023-02-19-os-virtual-memory-06.jpg)
+	- 프로세스에 대한 내부 테이블(internal table)을 검사해서 그 메모리 참조(reference)가 유효한지 여부를 검사
+		- 유효 (valid) : 페이지가 접근이 허용되고 메모리 상에 존재
+		- 무효 (invalid) : 페이지가 접근이 허용되지 않거나 메모리 상에 존재하지 않음 (보조기억장치에 존재)
+	- 무효한 경우 중 접근이 허용되지만 해당 페이지가 메모리에 올라오지 않았다면 보조기억장치로부터 가져오는 이하의 과정 수행
+		- 무효한 경우 중 접근이 허용되지 않는 페이지 대한 참조라면 프로세스는 중단
+	- 빈 공간, 즉 가용 프레임(free frame)를 찾음
+		- 예를 들어, 페이지 프레임 리스트(Linked List로, 운영체제가 유지)에서 하나를 가져옴
+	- 해당 페이지를 읽어들이도록 요청 (보조저장장치 $$\rightarrow$$ 새롭게 할당된 프레임)
+	- 보조저장장치 읽기가 끝나면, 이 페이지가 이제는 메모리에 있다는 것을 알리기 위해 페이지 테이블 갱신 $$\approx$$ (프로세스가 유지하고 있는) 내부 테이블 수정
+	- 트랩에 의해 중단되었던 명령어를 **처음부터** 다시 수행 (restart)
+5. 참조의 지역성 _Locality of Reference
+	- 모든 프로그램은 참조의 지역성(Locality of Reference) 성질이 있어서 프로그램의 어느 한 특정 작은 부분만 한동안 집중적으로 참조하기 때문에
+	- 요구 페이징은 만족할만한 성능을 보임
+	- Locality of Code, Locality of Data $$\in$$ Locality of Reference
+6. 하드웨어의 지원
+	- 요구 페이징을 지원하기 위해 필요한 하드웨어는 페이징과 스와핑을 위한 하드웨어와 동일
+		- 페이지 테이블 $$\ni$$ 보호 비트(protection bit)
+		- 보조저장장치(secondary memory) $$\approx$$ 스왑 공간(swap space)
+7. 요구 페이징의 성능
+	- $$EAT = (1-p) * ma + p * (page fault time)$$
+	- 각 변수의 의미
+		- EAT = Effective Access Time
+		- ma = memory access time
+		- p = probability of a page fault (ma의 수백 배, 수만 배에 달함)
+		- page fault time = 페이지 폴트를 처리하는 데에 걸리는 시간 (page를 읽는 데에 가장 많은 시간이 소요됨)
+8. 요구 페이징의 두 가지 주요 문제
+	- 페이지 교체 알고리즘
+		- 교체할 프레임을 어떻게 선택할 것인가
+	- 프레임 할당 알고리즘
+		- 각 프로세스에 얼마나 많은 프레임을 할당한 것인가
 
-- **디스크 한 쪽 끝에 암을 배치시키고, 다른 쪽 끝으로 암을 이동시키며 스캔**하는 방법이다.
-- 이 과정에서 헤드는 반전되고, 계속해서 이동한다.
-
-### C-SCAN Scheduling
+## 페이지 교체 알고리즘
 ---
-![https://media.vlpt.us/images/hoyaho/post/4ba899de-d707-4d48-a10c-03607ad676b7/image.png](https://media.vlpt.us/images/hoyaho/post/4ba899de-d707-4d48-a10c-03607ad676b7/image.png)
+1. 개요
+	- 가용 프레임(free frame)이 존재하지 않는 경우, 현재 사용되고 있지 않은 프레임 공간을 찾아서 비워주고 (swap space$$=$$secondary storage로 옮겨주고) 프레임이 가용하도록 만들어야 함
+	![2023-02-19-os-virtual-memory-09](/assets/img/illustrations/2023-02-19-os-virtual-memory-09.jpg)
+2. 평가
+	- 동일한 reference string(메모리 레퍼런스를 페이지 번호 단위로 나열한 문자열)에 대해 page faults의 발생 수가 최소인 것을 성능이 높은 것으로 평가
+	![2023-02-19-os-virtual-memory-10](/assets/img/illustrations/2023-02-19-os-virtual-memory-10.jpg)
+3. 종류
+	1. FIFO 페이지 교체 알고리즘
+		- First-In-First-Out
+		- 가장 오래된 페이지를 교체
+		![2023-02-19-os-virtual-memory-11](/assets/img/illustrations/2023-02-19-os-virtual-memory-11.jpg)
+		- FIFO의 심각한 문제는 Belady's Anomaly로, 할당된 프레임과 평가 성능이 비례하지 않는 지점들이 존재한다는 것
+		![2023-02-19-os-virtual-memory-12](/assets/img/illustrations/2023-02-19-os-virtual-memory-12.jpg)
+	2. 최적(Optimal) 페이지 교체 알고리즘
+		- 이상적인 페이지 교체 알고리즘으로, page faults 발생 수를 최소화함
+		- 미래에 가장 늦게 사용될 프레임을 교체
+		- 미래 정보가 필요하므로 다른 페이지 알고리즘에 대한 비교 연구로만 사용됨
+		![2023-02-19-os-virtual-memory-13](/assets/img/illustrations/2023-02-19-os-virtual-memory-13.jpg)
+	3. LRU 페이지 교체 알고리즘
+		- Least Recently Used
+		- 미래는 과거를 보면 알 수 있음 $$\longrightarrow$$ recent past로 near future 예측 가능
+		- 페이지의 사용 기록을 저장해서 최근에 가장 사용되지 않은 페이지를 교체
+		![2023-02-19-os-virtual-memory-14](/assets/img/illustrations/2023-02-19-os-virtual-memory-14.jpg)
+		- 최근에 가장 사용되지 않은 페이지를 판단하기 위해서는 자료구조가 복잡해지거나 메모리 용량을 많이 차지하거나 속도가 저하될 수 있으므로 하드웨어의 지원을 받는 방법이 있음
+			- counter
+				- 페이지가 참조될 때마다 counter나 clock을 복사해서 가장 작은 값을 가진 페이지를 교체
+			- stack
+				- 스택에 페이지 번호를 저장하고 페이지가 참조될 때마다 페이지 번호가 (중간에 있는 경우) 스택의 중간에서 제거되어 스택 꼭대기(top)에 놓이게 됨
+				- 스택의 꼭대기(top)는 항상 가장 최근에 사용된 페이지고, 밑바닥(bottom)은 가장 오랫동안 이용되지 않은 페이지
+				- 이때 Douly Linked List로 구현되는데, 리스트의 tail 포인터가 스택의 밑바닥(bottom)을 가리키고 있게 됨
+				![2023-02-19-os-virtual-memory-15](/assets/img/illustrations/2023-02-19-os-virtual-memory-15.jpg)
+		- 그러나 하드웨어 도움 없이도 많은 시스템이 reference bit를 지원
+			- reference bit이란
+				- 각 페이지에 포함된 속성으로 0 또는 1의 값을 가짐
+				- 페이지가 참조될 때 0에서 1로 바뀜
+			- reference bit가 0인 페이지를 교체
+	4. Second-Chance 페이지 교체 알고리즘
+		- FIFO 페이지 교체 알고리즘 + refernce bit(를 이용한 Secondary Chance)
+		- 기본적으로 FIFO 페이지 교체 알고리즘을 사용
+		- refrence bit에 따라서
+			- reference bit가 0인 경우 페이지를 교체
+			- reference bit가 1인 경우 이를 0으로 바꾸고 페이지는 교체하지 않은 채 페이지 교체할 대상의 후보를 그 다음 페이지로 넘어감
+		![2023-02-19-os-virtual-memory-16](/assets/img/illustrations/2023-02-19-os-virtual-memory-16.jpg)
 
-- 스캔 스케줄링의 변형으로 각 요청에 걸리는 시간이 균등해진다.
-- 한 방향으로만 헤더가 움직이며 디스크 끝에 도달하면 즉시 처음으로 돌아온다.
-- **그러나 디스크 끝에 도달 후 처음으로 돌아올 때 속도를 위해 데이터를 읽어들이지 않는다.**
-- 최종적으로 마지막 실린더가 첫 실린더를 감싸는 순환 구조가 성립된다.
-
-## Boot Block
+## 프레임 할당 알고리즘
 ---
-![https://media.vlpt.us/images/hoyaho/post/e1d633eb-b7d3-4d72-8057-62de327ed2d9/image.png](https://media.vlpt.us/images/hoyaho/post/e1d633eb-b7d3-4d72-8057-62de327ed2d9/image.png)
+1. 할당 알고리즘
+	- 균등 할당
+		- 각 프로세스의 모두 같은 개수의 프레임을 할당
+	- 비례 할당
+		- 각 프로세스의 크기 비율에 맞추어 프레임을 할당
+2. 전역 대 지역 할당
+	- 전역 교체
+		- 각 프로세스가 교체할 프레임을 다른 프로세스에 속한 프레임을 포함한 모든 프레임을 대상으로 찾는 경우
+	- 지역 교체
+		- 각 프로세스가 자기에게 할당된 프레임 중에서만 교체할 프레임을 찾는 경우
 
-- **부팅에 필요한 파일을 담는 디스크 영역**을 의미한다.
-- 전원이 켜졌을 때 반드시 실행되어야 하는 프로그램, 즉 1장에서 이야기했던 [부트 스트랩](https://velog.io/@hoyaho/%EC%9D%B8%ED%94%84%EB%9F%B0-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%95%EB%A6%AC-Section-01#bootstrap-program) 프로그램이 적재되어 있다.
-- MBR : 하드디스크의 첫 섹터에 저장되는 데이터이며 부트 코드와 파티션 테이블이 저장되어 있다. 또한, 어떤 파티션이 부트되어야 하는지에 대한 정보도 함께 적재한다.
+## 스레싱 _Thrashing
+1. 원인
+	- 프로세스에 충분한 프레임이 없는 경우, 작업 집합의 페이지를 지원하는데 필요한 최소 프레임도 없는 경우 발생 (멀티프로그래밍 정도가 높은 경우 발생)
+	- 페이지 폴트가 계속해서 발생하며 이에 따라 swapping page in out이 발생
+	![2023-02-19-os-virtual-memory-17](/assets/img/illustrations/2023-02-19-os-virtual-memory-17.jpg)
+2. 결과
+	- CPU 사용률은 낮아지고 Memory 사용률은 높아짐
+2. 해결
+	- 작업 집합 모델 _Workinhg-Set Model
+		- 프로그램 지역성을 바탕으로 하는 모델
+		![2023-02-19-os-virtual-memory-18](/assets/img/illustrations/2023-02-19-os-virtual-memory-18.jpg)
+		- $$\vartriangle$$를 크기로 하는 working-set window(sliding window)로 각 프로세스가 필요로 하는 최소한의 프레임 개수 보장
+		- page가 현재 사용된다면 working-set window에 속해있을 것이고, 사용되지 않는다면 속해있지 않을 것이라는 것이 기본 전제
+		![2023-02-19-os-virtual-memory-19](/assets/img/illustrations/2023-02-19-os-virtual-memory-19.jpg)
 
-## RAID
+## 참고
 ---
-- **RAID** : Redundant Arrays of Independent Disks (복수 배열 독립 디스크)
-- **여러 디스크를 묶어 하나의 디스크처럼 사용하는 디스크 구성 기술**이다.
-- 여러 개의 하드 디스크에 일부 중복된 데이터를 나눠서 저장한다.
-- **드라이브를 병렬로 작동시켜 데이터의 읽기 및 쓰기 속도를 향상**시킨다.
-    - 여러 디스크에 데이터를 저장할 때, 비트 단위 혹은 블록 단위로 나누어 디스크에 저장한다.
-- 또한 **신뢰성을 높여 데이터 보호 능력을 향상**시킨다.
-    - 한 디스크의 데이터를 다른 디스크로 미러링, 즉 중복 저장하여 어떤 디스크가 잘못되어도 데이터를 보존할 수 있게 한다.
-
-### RAID Levels
----
-![https://media.vlpt.us/images/hoyaho/post/2bb40069-eae7-4fed-9b5d-1f7473778111/image.png](https://media.vlpt.us/images/hoyaho/post/2bb40069-eae7-4fed-9b5d-1f7473778111/image.png)
-
-- 미러링은 신뢰성을 높여주지만 비용이 비싸고, 스트리핑은 효율성은 올라가지만 신뢰도를 낮추니 **상황에 맞게 적절히 조율**해야 한다.
-- 비용 대비 성능에 따라 레벨로 분류한다.
-    - RAID 0 : 데이터를 여러 디스크에 분할 저장하는 방식, 한 디스크에서 장애 발생 시 데이터가 모두 손실된다.
-    - RAID 1 : 디스크에 기록된 정보를 모두 미러링하여 저장한다.
-    - RAID 4 : 패리티 디스크를 추가하고, 패리티 비트를 넣어 디스크에 에러가 발생하지 않았는지 검사한다.
-    - RAID 5 : 각 디스크에 패리티 비트를 추가한다.
-    - RAID 6 : 각 디스크에 패리티 비트를 이중으로 추가하여 더 정교하게 에러를 감지한다.
-
-![https://media.vlpt.us/images/hoyaho/post/7e421235-3294-4387-9939-3b6c4b89bfd8/image.png](https://media.vlpt.us/images/hoyaho/post/7e421235-3294-4387-9939-3b6c4b89bfd8/image.png)
-
-- RAID 0 + 1 : 스트라이핑한 디스크를 미러링 하는 방식으로, 미러링 전에 한 디스크가 고장나면 데이터가 손실될 위험이 있다.
-- RAID 1 + 0 : 미러링한 디스크를 스트라이핑 하는 방식이며 RAID01 보다 안정성이 높아 현업에서 주로 사용된다.
-
-## I/O Systems
----
-![https://media.vlpt.us/images/hoyaho/post/39000b52-ef06-4699-83c1-c98e0e2b0396/image.png](https://media.vlpt.us/images/hoyaho/post/39000b52-ef06-4699-83c1-c98e0e2b0396/image.png)
-
-- 컴퓨터는 대부분 계산 혹은 **I/O를 처리하는 일에 대부분의 시간을 쏟는다.**
-- 운영체제가 I/O 장치와 I/O 연산을 관리한다.
-- 버스를 통해 CPU가 각각의 컨트롤러에게 I/O 처리 명령을 내린다.
-
-### Three types of I/O
----
-- I/O 작업 타입에는 세 가지가 있다.
-- **polling(busy-waiting)** : 바쁜 비트가 종료될 때까지 반복해서 레지스터를 읽음을 의미한다.
-
-![https://media.vlpt.us/images/hoyaho/post/1e2a1109-226a-413b-85ec-3537b49b1140/image.png](https://media.vlpt.us/images/hoyaho/post/1e2a1109-226a-413b-85ec-3537b49b1140/image.png)
-
-- **interrupt** : CPU에서 인터럽트를 감지하면 ISR로 보내 인터럽트를 관리하게 한다. ISR 주소는 인터럽트 벡터 테이블에 보관된다.
-
-![https://media.vlpt.us/images/hoyaho/post/274424ad-4be4-4430-bd7f-225c9ec224ca/image.png](https://media.vlpt.us/images/hoyaho/post/274424ad-4be4-4430-bd7f-225c9ec224ca/image.png)
-
-- **DMA** : 컨트롤러에서 직접 I/O 작업을 처리하는 것을 의미하며 대용량 데이터 전달에 적합하다.
-
-### Memory-Mapped I/O
----
-- I/O 처리를 위해 컨트롤러에 명령을 내린다고 했는데, 어떤 방식으로 명령을 내리는걸까?
-- 편리하게 I/O 장치에 접근하기 위해 Memory-Mapped I/O 구조를 사용한다.
-- 각각의 I/O 컨트롤러는 CPU로부터 받은 명령 혹은 데이터를 저장하는 레지스터를 가지고 있고, **이 레지스터들을 메모리에 매핑한다.**
-- 이로 인해 메모리 주소로 레지스터 값을 읽고 쓸 수 있다.
-- 즉, 레지스터에 메모리 주소를 부여하는 것이다.
-
-### Blocking I/O vs Non-blocking I/O
----
-- Blocking : 요청 스레드의 실행이 즉시 지연되고, 요청 사항을 모두 마무리한 뒤에야 리턴한다.
-- Non-blocking : 요청 스레드의 실행이 중단되지 않고, 요청 시 바로 리턴한다.
-
----
-
-## File-System Interface
----
-- 파일 시스템은 O/S의 모든 사용자 데이터 혹은 프로그램을 논리적으로 저장하고, 사용자가 접근 가능하게 설정하는 것을 의미한다.
-- 관련 데이터를 저장하는 파일과, 시스템 내의 모든 파일을 정리하는 디렉터리, 이 두 가지로 파일 시스템이 구성된다.
-- 쉽게 이야기하면 **O/S에서 파일을 관리하는 부분**이라고 보면 된다.
-
-### File Access Method
----
-- 파일에 접근하는 방법은 두 가지가 있다.
-
-![https://media.vlpt.us/images/hoyaho/post/b1e16f92-ecac-49fb-b8bc-2b9b8faf7e2f/image.png](https://media.vlpt.us/images/hoyaho/post/b1e16f92-ecac-49fb-b8bc-2b9b8faf7e2f/image.png)
-
-1. **순차 접근(sequential access)** : 파일 내 정보를 순서대로 접근하는 것을 의미한다.
-    - 파일의 레코드가 순차적으로 기록되어 있어 판독할 때도 순차적으로 판독한다.
-2. **직접 접근(direct access)** : 파일 내에서 원하는 레코드로 바로 진입해 그 위치에서부터 파일을 읽는 것을 의미한다.
-
-### Directory Structure
----
-- 디렉터리는 파일 시스템 내부에 있는 것으로 효율적 파일 사용을 위해 디스크에 존재하는 파일에 대한 여러 정보를 가지고 있는 특수한 형태의 파일이다.
-- 디렉터리는 각 파일의 위치, 크기등의 정보를 가지고 있다.
-- 디렉터리 구조의 종류에는 1단계 디렉터리, 2단계 디렉터리, 트리 디렉터리, 비순환 그래프 디렉터리, 일반적인 그래프 디렉터리가 있다.
-
-![https://media.vlpt.us/images/hoyaho/post/a3eb7a68-683e-43e3-8734-2876ef252a49/image.png](https://media.vlpt.us/images/hoyaho/post/a3eb7a68-683e-43e3-8734-2876ef252a49/image.png)
-
----
-
-## File-System Implementation
----
-### Allocation Method
----
-- **디스크 공간에 파일을 할당할 때 어떤 방식으로 해야 효율, 속도를 개선**할 수 있을까?
-
-### Contiguous Allocation
----
-- 연속 할당은 **하나의 파일이 디스크에 연속적으로 저장**되는 것을 의미한다.
-- 파일이 삭제되면 홀이 생기고, 이 작업이 반복되면 홀이 흩어지게 된다. 이럴 때 새 파일을 어느 홀에 배치할 수 있느냐에 따라 **[외부 단편화](https://velog.io/@hoyaho/%EC%9D%B8%ED%94%84%EB%9F%B0-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%95%EB%A6%AC-Section-10-%EF%BD%9C-CS-Study#memory-allocation)** 문제가 발생할 수 있다.
-
-### Linked Allocation
----
-![https://media.vlpt.us/images/hoyaho/post/b8984edd-392e-4c61-ab1c-0bf4c3dab24a/image.png](https://media.vlpt.us/images/hoyaho/post/b8984edd-392e-4c61-ab1c-0bf4c3dab24a/image.png)
-
-- 파일을 연속적으로 저장하지 않고 링크드 리스트를 이용해 **아무 곳에나 들어갈 수 있게 만드는 방법**이다.
-- 연속 할당의 문제점을 해결할 수 있는 방법이다.
-- 그러나, 중간에 한 섹터에 문제가 발생하면 이 후의 링크도 모두 잃기 때문에 안정적이지 못하다.
-
-### File Allocation Table
----
-![https://media.vlpt.us/images/hoyaho/post/8b7cded8-f49b-4c88-99e4-d0e97fd9b156/image.png](https://media.vlpt.us/images/hoyaho/post/8b7cded8-f49b-4c88-99e4-d0e97fd9b156/image.png)
-
-- 연결 할당의 변종으로, 하나의 데이터 블록에 다음 블록에 대한 정보를 담고 있는 테이블이다.
-- 즉, 포인터를 별도의 테이블에 따로 보관하는 방법이다.
-- 연결 할당의 문제점을 해결할 수 있는 방법이다.
-
-### Indexed Allocation
----
-![https://media.vlpt.us/images/hoyaho/post/b0c11578-fb84-407c-a743-06613fbdb2f2/image.png](https://media.vlpt.us/images/hoyaho/post/b0c11578-fb84-407c-a743-06613fbdb2f2/image.png)
-
-- 각 파일에 포인터가 순서대로 저장된 인덱스 블록을 할당한다.
-- 인덱스 블록의 i 번째 항목이 파일의 i 번째 블록을 가리킨다.
-- 너무 큰 파일인 경우 하나의 블록으로 인덱스를 모두 저장할 수 없기 때문에, 다중 인덱스 블록을 구성해야 한다.
+1. 운영체제 공룡책 강의 | 주니온 | 인프런
+	https://www.inflearn.com/course/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%84%EA%B3%B5%EA%B0%95%EC%9D%98/dashboard
+2. 운영체제 제 10판 | Abraham Silberschatz, Peter Baer Galvin, Greg Gagne 저/박민규 역 | 퍼스트북 | 2020년 02월 28일
+3. 운영체제 제 10판 솔루션
+	https://codex.cs.yale.edu/avi/os-book/OS10/practice-exercises/index-solu.html
