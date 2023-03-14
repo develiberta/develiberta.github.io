@@ -1,5 +1,5 @@
 ---
-title: Virtual Memroy
+title: Storage Management
 author: Develiberta
 date: 2023-02-19 18:00:00 +0900
 categories: [CS, OS]
