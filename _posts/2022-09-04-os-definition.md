@@ -62,7 +62,7 @@ tags: [CS, OS]
 
 6. (명제의 역) 정보를 처리하는 것은 모두 컴퓨터일까
 	- NO. "Computer"라고 명명될 조건
-		1. 범용성 (Univrsality)
+		1. 범용성 (Universality)
 			- 범용 컴퓨터 (General-purpose Computer)
 			- S/W가 하고자 하는 모든 것을 H/W(Computer)가 지원 가능해야 함
 				- 예를 들어, 계산기는 계산 외에는 S/W를 통한 다른 작업을 할 수 없으므로 컴퓨터가 아님
