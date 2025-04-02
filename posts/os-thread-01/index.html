@@ -1,0 +1,203 @@
+<!DOCTYPE html><html lang="en" mode="light" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="day-prompt" content="days ago"><meta name="hour-prompt" content="hours ago"><meta name="minute-prompt" content="minutes ago"><meta name="justnow-prompt" content="just now"><meta name="generator" content="Jekyll v4.4.1" /><meta property="og:title" content="OS Thread (1)" /><meta name="author" content="Develiberta" /><meta property="og:locale" content="en" /><meta name="description" content="목적 CPU 이용의 기본 단위가 된 스레드를 이해한다." /><meta property="og:description" content="목적 CPU 이용의 기본 단위가 된 스레드를 이해한다." /><link rel="canonical" href="https://develiberta.github.io/posts/os-thread-01/" /><meta property="og:url" content="https://develiberta.github.io/posts/os-thread-01/" /><meta property="og:site_name" content="Develiberta" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2022-10-16T13:00:00+09:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="OS Thread (1)" /><meta name="twitter:site" content="@develiberta" /><meta name="twitter:creator" content="@Develiberta" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Develiberta"},"dateModified":"2022-10-16T13:00:00+09:00","datePublished":"2022-10-16T13:00:00+09:00","description":"목적 CPU 이용의 기본 단위가 된 스레드를 이해한다.","headline":"OS Thread (1)","mainEntityOfPage":{"@type":"WebPage","@id":"https://develiberta.github.io/posts/os-thread-01/"},"url":"https://develiberta.github.io/posts/os-thread-01/"}</script><title>OS Thread (1) | Develiberta</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=1743601323"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=1743601323"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=1743601323"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=1743601323"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico?v=1743601323"><meta name="apple-mobile-web-app-title" content="Develiberta"><meta name="application-name" content="Develiberta"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css?v=1743601323"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css?v=1743601323"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end" lang="en"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/?v=1743601323" alt="avatar" class="mx-auto"> <img src="/assets/img/favicons/android-chrome-512x512.png" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/?v=1743601323">Develiberta</a></div><div class="site-subtitle font-italic"></div></div><ul class="w-100"><li class="nav-item"> <a href="/?v=1743601323" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/?v=1743601323" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/?v=1743601323" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/?v=1743601323" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/?v=1743601323" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center"> <a href="https://github.com/develiberta?v=1743601323" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href="https://twitter.com/develiberta?v=1743601323" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['develiberta','gmail.com'].join('@')?v=1743601323" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml?v=1743601323" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/?v=1743601323"> Home </a> </span> <span>OS Thread (1)</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>OS Thread (1)</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> Develiberta </span> on <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Sun, Oct 16, 2022, 1:00 PM +0900" >Oct 16, 2022<i class="unloaded">2022-10-16T13:00:00+09:00</i> </span></div><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1557 words">8 min read</span></div></div><div class="post-content"><h2 id="목적">목적</h2><hr /><ol><li>CPU 이용의 기본 단위가 된 스레드를 이해한다.</ol><h2 id="실천-목표">실천 목표</h2><hr /><ol><li>스레드의 기본 구성요소를 식별하고 스레드와 프로세스를 대조한다.<li>다중 스레드 프로세스를 설계할 때의 주요 이점과 중대한 과제를 설명한다.</ol><h2 id="이제까지의-내용은-사실-싱글-스레드">이제까지의 내용은 사실, 싱글 스레드</h2><hr /><ul><li>프로세스 내 스레드가 1개인 싱글 스레드 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-01.jpg" alt="2022-10-16-os-thread-01" /></ul><h2 id="그렇다면-스레드란">그렇다면 스레드란</h2><hr /><ul><li>프로세스 내에서 특정 부분을 공유하며 별도로 수행되는 일꾼<li>경량 프로세스라고 할 수 있으며, CPU를 점유하는 기본적인 단위<li>한 프로세스 내 스레드가 공유하는 변수들 : code, data, files<li>스레드 별로 할당되는 변수들 : TID(Thread ID), PC(Program Counter), Register Set, Stack <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-02.jpg" alt="2022-10-16-os-thread-02" /></ul><h2 id="멀티-스레드의-이점">멀티 스레드의 이점</h2><hr /><ul><li>기존 싱글 스레드 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-03.jpg" alt="2022-10-16-os-thread-03" /><li>[참고] 기존 싱글 스레드 : Data Server<div lang="java" class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+</pre><td class="rouge-code"><pre>      <span class="kn">package</span> <span class="nn">os.concepts</span><span class="o">;</span>
+
+      <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.io.OutputStream</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.io.PrintWriter</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.net.ServerSocket</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.net.Socket</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.text.DateFormat</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+
+      <span class="kd">public</span> <span class="kd">class</span> <span class="nc">DateServer</span> <span class="o">{</span>
+          <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+              <span class="nc">ServerSocket</span> <span class="n">serverSocket</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+              <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">7777</span><span class="o">;</span>
+
+              <span class="k">try</span> <span class="o">{</span>
+                  <span class="cm">/* 서버 소켓 생성 후 7777번 포트와 결합 */</span>
+                  <span class="n">serverSocket</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ServerSocket</span><span class="o">(</span><span class="n">port</span><span class="o">);</span>
+                  <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%s 서버가 준비되었습니다.\n"</span><span class="o">,</span> <span class="n">getTime</span><span class="o">());</span>
+              <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+              <span class="o">}</span>
+
+              <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%s 연결요청을 기다립니다.\n"</span><span class="o">,</span> <span class="n">getTime</span><span class="o">());</span>
+                  <span class="cm">/* 서버 소켓은 클라이언트의 연결요청이 올 때까지 실행을 멈추고 기다림 */</span>
+                  <span class="cm">/* 클라이언트의 연결요청이 들어오면 클라이언트 소켓과 통신할 새로운 소켓 생성 */</span>
+                  <span class="nc">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
+                  <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%s %s:%d으로부터 연결요청이 들어왔습니다.\n"</span><span class="o">,</span> <span class="n">getTime</span><span class="o">(),</span> <span class="n">socket</span><span class="o">.</span><span class="na">getInetAddress</span><span class="o">(),</span> <span class="n">socket</span><span class="o">.</span><span class="na">getPort</span><span class="o">());</span>
+
+                  <span class="cm">/* 소켓의 출력스트림을 얻음 */</span>
+                  <span class="nc">OutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">();</span>
+                  <span class="nc">PrintWriter</span> <span class="n">pout</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">out</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+
+                  <span class="cm">/* 원격 소켓에 데이터를 보냄 */</span>
+                  <span class="n">pout</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%s Message From Server\n"</span><span class="o">,</span> <span class="n">getTime</span><span class="o">());</span>
+
+                  <span class="cm">/* 스트림과 소켓을 닫음 */</span>
+                  <span class="n">socket</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+                  <span class="n">pout</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+                  <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+              <span class="o">}</span>
+          <span class="o">}</span>
+
+          <span class="kd">private</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">getTime</span><span class="o">()</span> <span class="o">{</span>
+              <span class="nc">DateFormat</span> <span class="n">df</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SimpleDateFormat</span><span class="o">(</span><span class="s">"[hh:mm:ss]"</span><span class="o">);</span>
+              <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="k">new</span> <span class="nc">Date</span><span class="o">());</span>
+          <span class="o">}</span>
+      <span class="o">}</span>
+</pre></table></code></div></div><li>[참고] 기존 싱글 스레드 : Data Client<div lang="java" class="language-java highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+</pre><td class="rouge-code"><pre>      <span class="kn">package</span> <span class="nn">os.concepts</span><span class="o">;</span>
+
+      <span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.net.ConnectException</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.net.Socket</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.text.DateFormat</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+      <span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+
+      <span class="kd">public</span> <span class="kd">class</span> <span class="nc">DateClient</span> <span class="o">{</span>
+          <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+              <span class="k">try</span> <span class="o">{</span>
+                  <span class="nc">String</span> <span class="n">serverIp</span> <span class="o">=</span> <span class="s">"127.0.0.1"</span><span class="o">;</span>
+                  <span class="kt">int</span> <span class="n">serverPort</span> <span class="o">=</span> <span class="mi">7777</span><span class="o">;</span>
+
+                  <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%s:%d서버에 연결 중입니다.\n"</span><span class="o">,</span> <span class="n">serverIp</span><span class="o">,</span> <span class="n">serverPort</span><span class="o">);</span>
+
+                  <span class="cm">/* 소켓을 생성해서 연결을 요청 */</span>
+                  <span class="nc">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Socket</span><span class="o">(</span><span class="n">serverIp</span><span class="o">,</span> <span class="n">serverPort</span><span class="o">);</span>
+
+                  <span class="cm">/* 소켓의 입력스트림을 얻음 */</span>
+                  <span class="nc">InputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">();</span>
+                  <span class="nc">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="n">in</span><span class="o">));</span>
+
+                  <span class="cm">/* 원격 소켓으로부터 받은 데이터 출력 */</span>
+                  <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%s 서버로부터 받은 메시지\n"</span><span class="o">,</span> <span class="n">getTime</span><span class="o">());</span>
+                  <span class="nc">String</span> <span class="n">line</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                  <span class="k">while</span> <span class="o">((</span><span class="n">line</span> <span class="o">=</span> <span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+                      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">line</span><span class="o">);</span>
+
+                  <span class="cm">/* 스트림과 소켓을 닫음 */</span>
+                  <span class="n">socket</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+                  <span class="n">br</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+                  <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+              <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">ConnectException</span> <span class="n">ce</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="n">ce</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+              <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">ie</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="n">ie</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+              <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+              <span class="o">}</span>
+          <span class="o">}</span>
+
+          <span class="kd">private</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">getTime</span><span class="o">()</span> <span class="o">{</span>
+              <span class="nc">DateFormat</span> <span class="n">df</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SimpleDateFormat</span><span class="o">(</span><span class="s">"[hh:mm:ss]"</span><span class="o">);</span>
+              <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="k">new</span> <span class="nc">Date</span><span class="o">());</span>
+          <span class="o">}</span>
+      <span class="o">}</span>
+</pre></table></code></div></div><li>웹 서버의 서버-클라이언트 시스템이 멀티 스레드의 대표적인 예 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-04.jpg" alt="2022-10-16-os-thread-04" /> <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-05.jpg" alt="2022-10-16-os-thread-05" /> <em>Copyrightⓒ2022 &lt;CentOS 7으로 리눅스마스터 1급 정복하기&gt;, 정성재, 북스홀릭 All rights reserved.</em> <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-06.jpg" alt="2022-10-16-os-thread-06" /> <em>Copyrightⓒ2022 &lt;CentOS 7으로 리눅스마스터 1급 정복하기&gt;, 정성재, 북스홀릭 All rights reserved.</em><li>그래서, 멀티 스레드의 이점 4가지<ol><li>응답성 (Responsiveness)<ul><li>특히 사용자 인터페이스에서 중요</ul><li>자원 공유 (Resource Sharing)<ul><li>스레드는 자동으로 그들이 속한 프로세스의 자원들과 메모리를 공유</ul><li>경제성 (Economy)<ul><li>프로세스보다 스레드를 생성하고 문맥 교환하는 게 경제적</ul><li>규모 적응성 (Scalability)<ul><li>멀티 코어 구조에서 멀티 스레드의 이점이 더욱 증가</ul></ol></ul><h2 id="스레드-프로그래밍-java">스레드 프로그래밍 (Java)</h2><hr /><ul><li>Java에서는 프로그램 수행의 기본적인 모델이 스레드 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-07.jpg" alt="2022-10-16-os-thread-07" /> _Copyrightⓒ2022 <Java의 정석="">, 남궁성, 도우출판 All rights reserved._</Java의><li>스레드 라이브러리를 이용하는 방법은 기본적으로 2가지<ol><li>Thread 클래스 상속 받기<li>Runnable 인터페이스 구현하기<ul><li>불필요하게 클래스를 하나 생성해야 하므로 람다 표현식 이용해서 익명 클래스로 대체 가능<ol><li>Thread 클래스 상속 받기 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-10.jpg" alt="2022-10-16-os-thread-10" /> <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-11.jpg" alt="2022-10-16-os-thread-11" /><li>Runnable 인터페이스 구현하기 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-12.jpg" alt="2022-10-16-os-thread-12" /> <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-13.jpg" alt="2022-10-16-os-thread-13" /><li>Runnable 인터페이스 구현하기 - 람다 표현식 이용해서 익명 클래스로 대체 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-14.jpg" alt="2022-10-16-os-thread-14" /></ol></ul></ol><li>부모 스레드의 대기와 스레드의 종료 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-15.jpg" alt="2022-10-16-os-thread-12" /> <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-16.jpg" alt="2022-10-16-os-thread-13" /></ul><h2 id="멀티-코어-프로그래밍">멀티 코어 프로그래밍</h2><hr /><ul><li>멀티 스레드는 멀티 코어 시스템에서 보다 효율적<li>시분할(Time-sharing) 뿐 아니라 병렬(Parallelism)로 실행되기 때문 <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-08.jpg" alt="2022-10-16-os-thread-08" /><li>그러나 멀티 코어 프로그래밍을 하는 것은 복잡한 작업이고, 다음은 이에 대한 5가지 도전 과제<ol><li>태스크 인식 (identifying tasks)<ul><li>응용 프로그램을 분석해서 독립된 병행 가능 태스크로 나눌 수 있는 영역을 찾는 작업</ul><li>균형 (balance)<ul><li>찾아낸 영역들이 균등한 기여도를 가지도록 태스크를 나누는 작업</ul><li>데이터 분리 (data spliting)<ul><li>태스크가 접근하고 조작하는 데이터를 개별 코어에서 사용할 수 있도록 나누는 작업</ul><li>데이터 종속성 (data dependency)<ul><li>태스크가 접근하는 데이터에 대해 둘 이상의 태스크 사이에 종속성이 없는지 검토</ul><li>테스트 및 디버깅 (test and debugging)<ul><li>단일 스레드인 경우보다 테스트 및 디버깅이 어려움</ul></ol><li>위 문제만 해결한다면, 멀티 코어 시스템에서 코어는 다다익선인가? <img data-proofer-ignore data-src="/assets/img/illustrations/2022-10-16-os-thread-09.jpg" alt="2022-10-16-os-thread-09" /></ul><h2 id="참고">참고</h2><hr /><ol><li>운영체제 공룡책 강의 | 주니온 | 인프런 https://www.inflearn.com/course/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B3%B5%EB%A3%A1%EC%B1%85-%EC%A0%84%EA%B3%B5%EA%B0%95%EC%9D%98/dashboard<li><div class="table-wrapper"><table><tbody><tr><td>운영체제 제 10판<td>Abraham Silberschatz, Peter Baer Galvin, Greg Gagne 저/박민규 역<td>퍼스트북<td>2020년 02월 28일</table></div><li>운영체제 제 10판 솔루션 https://codex.cs.yale.edu/avi/os-book/OS10/practice-exercises/index-solu.html</ol></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/cs/'>CS</a>, <a href='/categories/os/'>OS</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/cs/" class="post-tag no-text-decoration" >CS</a> <a href="/tags/os/" class="post-tag no-text-decoration" >OS</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?v=1743601323"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=OS Thread (1) - Develiberta&url=https://develiberta.github.io/posts/os-thread-01/?v=1743601323" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=OS Thread (1) - Develiberta&u=https://develiberta.github.io/posts/os-thread-01/?v=1743601323" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=OS Thread (1) - Develiberta&url=https://develiberta.github.io/posts/os-thread-01/?v=1743601323" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink('', 'Link copied successfully!')" data-toggle="tooltip" data-placement="top" title="Copy link"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/os-definition/?v=1743601323">OS Definition</a><li><a href="/posts/os-storage-management/?v=1743601323">Storage Management</a><li><a href="/posts/os-virtual-memory/?v=1743601323">Virtual Memroy</a><li><a href="/posts/os-main-memory/?v=1743601323">Main Memroy</a><li><a href="/posts/os-deadlocks/?v=1743601323">Deadlocks</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/cs/?v=1743601323">CS</a> <a class="post-tag" href="/tags/os/?v=1743601323">OS</a> <a class="post-tag" href="/tags/securiy/?v=1743601323">Securiy</a> <a class="post-tag" href="/tags/ansible/?v=1743601323">Ansible</a> <a class="post-tag" href="/tags/devops/?v=1743601323">DevOps</a> <a class="post-tag" href="/tags/linux/?v=1743601323">Linux</a> <a class="post-tag" href="/tags/typography/?v=1743601323">typography</a> <a class="post-tag" href="/tags/algorithm/?v=1743601323">Algorithm</a> <a class="post-tag" href="/tags/favicon/?v=1743601323">favicon</a> <a class="post-tag" href="/tags/getting-started/?v=1743601323">getting started</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/os-thread-02/?v=1743601323"><div class="card-body"> <span class="timeago small" >Oct 23, 2022<i class="unloaded">2022-10-23T13:00:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>OS Thread (2)</h3><div class="text-muted small"><p> 목적 CPU 이용의 기본 단위가 된 스레드를 이해한다. 실천 목표 스레드 풀, 포크 조인 및 그랜드 센트럴 디스패치를 포함하여 암시적 스레딩에 대한 다양한 접근 방식을 설명한다. Windows 및 Linux 운영체제가 스레드를 어떻게 나타내는지 설명한다. Pthread, Java 및 Windows 스레딩 API를 사용하여 다중...</p></div></div></a></div><div class="card"> <a href="/posts/os-cpu-scheduling-01/?v=1743601323"><div class="card-body"> <span class="timeago small" >Oct 29, 2022<i class="unloaded">2022-10-29T13:00:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>OS CPU Scheduling</h3><div class="text-muted small"><p> 목적 CPU 이용의 기본 단위가 된 스레드를 이해한다. 실천 목표 다양한 CPU 스케줄링 알고리즘을 설명한다. 스케줄링 기준에 따라 CPU 스케줄링 알고리즘을 평가한다. 한정된 CPU (코어) 자원과 수많은 프로세스(및 스레드) 한정된 CPU (코어)를 효율적으로 할당하기 위한 스케줄링 필요 기본적인 개념 정리 – ...</p></div></div></a></div><div class="card"> <a href="/posts/os-synchronization-tools/?v=1743601323"><div class="card-body"> <span class="timeago small" >Nov 12, 2022<i class="unloaded">2022-11-12T13:00:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>OS Synchronization Tools</h3><div class="text-muted small"><p> 목적 협력적 프로세스가 동시에 데이터에 접근할 때 발생하는 문제를 이해한다. 임계구역 문제에 대한 하드웨어 해결책과 소프트웨어 해결책을 이해한다. 실천 목표 임계구역 문제를 설명하고 경쟁 조건(Race Condition)을 설명한다. 메모리 장벽, compare-and-swap 연산 및 원자적 변수를 사용하여 임계구역 문제에 ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/os-process-03/?v=1743601323" class="btn btn-outline-primary" prompt="Older"><p>OS Process (3)</p></a> <a href="/posts/os-thread-02/?v=1743601323" class="btn btn-outline-primary" prompt="Newer"><p>OS Thread (2)</p></a></div><script src="https://utteranc.es/client.js" repo="develiberta/blog-comments" issue-term="url" theme="github-light" crossorigin="anonymous" async> </script> <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2025 <a href="https://twitter.com/develiberta">develiberta</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/cs/?v=1743601323">CS</a> <a class="post-tag" href="/tags/os/?v=1743601323">OS</a> <a class="post-tag" href="/tags/securiy/?v=1743601323">Securiy</a> <a class="post-tag" href="/tags/ansible/?v=1743601323">Ansible</a> <a class="post-tag" href="/tags/devops/?v=1743601323">DevOps</a> <a class="post-tag" href="/tags/linux/?v=1743601323">Linux</a> <a class="post-tag" href="/tags/typography/?v=1743601323">typography</a> <a class="post-tag" href="/tags/algorithm/?v=1743601323">Algorithm</a> <a class="post-tag" href="/tags/favicon/?v=1743601323">favicon</a> <a class="post-tag" href="/tags/getting-started/?v=1743601323">getting started</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://develiberta.github.io{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js"></script> <script defer src="/assets/js/dist/post.min.js?v=1743601323"></script> <script src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.16.1,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script defer src="/app.js?v=1743601323"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script>
